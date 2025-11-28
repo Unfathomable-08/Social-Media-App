@@ -3,9 +3,9 @@ import { Dimensions } from 'react-native';
 const { width: deviceWidth, height: deviceHeight } = Dimensions.get('window');
 
 const hp = (percentage) => {
-  return (percentage * deviceHeight) / 100;
+  return (percentage * deviceHeight) / 100; // Like vh in css
 }
 
 const wp = (percentage) => {
-  return (percentage * deviceWidth) / 100;
+  return (percentage * deviceWidth) / 100; // Like vw in css
 }

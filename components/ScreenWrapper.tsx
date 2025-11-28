@@ -1,4 +1,4 @@
-import { View, Text, Platform } from 'react-native'
+import { View } from 'react-native'
 import React from 'react'
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 

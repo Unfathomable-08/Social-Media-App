@@ -45,3 +45,4 @@ app-example
 # replit
 replit.md
 .replit
+.env

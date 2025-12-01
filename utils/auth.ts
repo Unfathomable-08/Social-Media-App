@@ -8,9 +8,16 @@ import {
   User,
   updateProfile,
 } from "firebase/auth";
-import { auth } from "@/lib/firebase";
+import { auth, db } from "@/lib/firebase";
+import { doc, setDoc, serverTimestamp, collection, query, where, getDocs } from "firebase/firestore";
 
-// Sign Up
+const isUsernameUnique = async (username: string) => {
+  const q = query(collection(db, "vibely-users"), where("username", "==", username));
+  const snapshot = await getDocs(q);
+  return snapshot.empty;
+};
+
+// ============== Sign Up ==============
 export const signUp = async (
   email: string,
   password: string,
@@ -38,10 +45,24 @@ export const signUp = async (
     // or better: use your published Expo URL or custom domain
   });
 
+  // Create Firestore document 
+  await setDoc(doc(db, "vibely-users", user.uid), {
+    uid: user.uid,
+    name: displayName || "",
+    username: "",
+    avatar: "",
+    bio: "",
+    followers: [],
+    followings: [],
+    postsCount: 0,
+    lastOnline: serverTimestamp(),
+    createdAt: serverTimestamp(),
+  });
+
   return user;
 };
 
-// Send Verification Email Again (if needed)
+// ========== Send Verification Email Again ==========
 export const resendVerificationEmail = async () => {
   if (!auth?.currentUser) throw new Error("No user logged in");
   if (auth?.currentUser.emailVerified)
@@ -52,7 +73,7 @@ export const resendVerificationEmail = async () => {
   });
 };
 
-// Sign In
+// ============== Sign In ==============
 export const signIn = async (email: string, password: string) => {
   if (!auth) throw new Error("Firebase auth not initialized");
 
@@ -72,35 +93,14 @@ export const signIn = async (email: string, password: string) => {
   return user;
 };
 
-// Sign Out
+// ============== Sign Out ==============
 export const logOut = async () => {
   if (auth) {
     await signOut(auth);
   }
 };
 
-// Listen to auth state (very useful!)
-export const onAuthStateChange = (callback: (user: User | null) => void) => {
-  if (!auth) return;
-  return onAuthStateChanged(auth, (user) => {
-    callback(user);
-  });
-};
-
-// Check current user + email verification status
-export const getCurrentUser = (): User | null => {
-  return auth?.currentUser || null;
-};
-
-export const isEmailVerified = (): boolean => {
-  return auth?.currentUser?.emailVerified || false;
-};
-
-// Reload user to update emailVerified status (important!)
-export const reloadUser = async () => {
-  if (auth?.currentUser) {
-    await auth.currentUser.reload();
-    return auth.currentUser.emailVerified;
-  }
-  return false;
+// ============== Update Profile ==============
+export const updateUserProfile = async (uid: string, data: any) => {
+  await setDoc(doc(db, "vibely-users", uid), data, { merge: true });
 };

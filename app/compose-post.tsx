@@ -7,23 +7,32 @@ import { hp, wp } from '../helpers/common';
 import Icon from '../assets/icons';
 import { useState } from 'react';
 import * as ImagePicker from 'expo-image-picker';
+import axios from 'axios';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { auth, db } from '@/lib/firebase';
+import * as FileSystem from 'expo-file-system';
 
 const MAX_CHARS = 500;
+const IMGBB_API_KEY = process.env.EXPO_PUBLIC_IMGBB_API_KEY;
 
 export default function CreatePost() {
   const router = useRouter();
   const [text, setText] = useState('');
   const [image, setImage] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  const user = auth?.currentUser;
 
   const isOverLimit = text.length > MAX_CHARS;
   const isEmpty = text.trim().length === 0;
-  const isDisabled = isEmpty || isOverLimit;
+  const isDisabled = isEmpty || isOverLimit || loading;
 
   const pickImage = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       quality: 0.8,
+      base64: false, // We don't need base64 anymore
     });
 
     if (!result.canceled) {
@@ -33,14 +42,68 @@ export default function CreatePost() {
 
   const removeImage = () => setImage(null);
 
-  const handlePost = () => {
-    if (isDisabled) return;
+  const uploadImageToImgBB = async (uri: string): Promise<string> => {
+    if (!IMGBB_API_KEY) {
+      throw new Error('ImgBB API key is missing!');
+    }
 
-    // TODO: Call your Firebase/Backend API
-    console.log('Posting:', { text, image });
-    Alert.alert('Posted!', 'Your vibe is now live.', [
-      { text: 'Cool', onPress: () => router.replace('/') }
-    ]);
+    const fileInfo = await FileSystem.getInfoAsync(uri);
+    if (!fileInfo.exists) throw new Error('Image file not found');
+
+    // Read file as base64
+    const base64 = await FileSystem.readAsStringAsync(uri, {
+      encoding: FileSystem.EncodingType.Base64,
+    });
+
+    const formData = new FormData();
+    formData.append('image', base64);
+
+    const response = await axios.post(
+      `https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`,
+      formData,
+      {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      }
+    );
+
+    return response.data.data.url;
+  };
+
+  const handlePost = async () => {
+    if (isDisabled || !user) return;
+
+    setLoading(true);
+
+    try {
+    console.log('Posting...', { user: user.uid, text, image });
+    
+    let imageUrl: string | null = null;
+    
+    // Upload image if exists
+    if (image) {
+        imageUrl = await uploadImageToImgBB(image);
+    }
+    
+    console.log('Url...', imageUrl);
+    // Save post to Firestore
+    await addDoc(collection(db, 'users', user.uid, 'posts'), {
+        text: text.trim(),
+        imageUrl: imageUrl || '',
+        likeCount: 0,
+        commentCount: 0,
+        createdAt: serverTimestamp(),
+    });
+    
+    console.log('done...');
+      Alert.alert('Posted!', 'Your vibe is now live!', [
+        { text: 'Cool', onPress: () => router.replace('/') },
+      ]);
+    } catch (error: any) {
+      console.error('Error posting:', error);
+      Alert.alert('Error', error.message || 'Failed to post. Try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -63,7 +126,7 @@ export default function CreatePost() {
             disabled={isDisabled}
           >
             <Text style={[styles.postButtonText, isDisabled && styles.postButtonTextDisabled]}>
-              Post
+              {loading ? 'Posting...' : 'Post'}
             </Text>
           </Pressable>
         </View>
@@ -71,7 +134,6 @@ export default function CreatePost() {
         <View style={styles.container}>
           {/* Avatar + Text Input */}
           <View style={styles.inputRow}>
-            {/* Placeholder Avatar */}
             <View style={styles.avatar}>
               <Icon name="user" size={30} color={theme.colors.primary} strokeWidth={2} />
             </View>
@@ -90,7 +152,7 @@ export default function CreatePost() {
             />
           </View>
 
-          {/* Attached Image */}
+          {/* Attached Image Preview */}
           {image && (
             <View style={styles.imagePreviewContainer}>
               <Image source={{ uri: image }} style={styles.imagePreview} resizeMode="cover" />
@@ -106,7 +168,6 @@ export default function CreatePost() {
               <Pressable onPress={pickImage} style={styles.toolBtn}>
                 <Icon name="image" size={24} color={theme.colors.primary} strokeWidth={2} />
               </Pressable>
-              {/* You can add GIF, Poll, Location later */}
             </View>
 
             <View style={styles.charCounter}>
@@ -125,6 +186,7 @@ export default function CreatePost() {
   );
 }
 
+// Styles remain the same
 const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
@@ -140,13 +202,12 @@ const styles = StyleSheet.create({
     fontSize: hp(2.2),
     color: theme.colors.primary,
     fontWeight: theme.fonts.semibold,
-},
-postButton: {
+  },
+  postButton: {
     backgroundColor: theme.colors.primary,
     paddingHorizontal: wp(6),
     paddingVertical: hp(1.2),
     borderRadius: 30,
-    fontWeight: theme.fonts.semibold,
   },
   postButtonDisabled: {
     backgroundColor: '#ccc',
@@ -159,15 +220,8 @@ postButton: {
   postButtonTextDisabled: {
     color: '#999',
   },
-  container: {
-    flex: 1,
-    paddingHorizontal: wp(5),
-  },
-  inputRow: {
-    flexDirection: 'row',
-    marginTop: hp(3),
-    gap: wp(4),
-  },
+  container: { flex: 1, paddingHorizontal: wp(5) },
+  inputRow: { flexDirection: 'row', marginTop: hp(3), gap: wp(4) },
   avatar: {
     width: hp(6.5),
     height: hp(6.5),
@@ -196,10 +250,7 @@ postButton: {
     overflow: 'hidden',
     position: 'relative',
   },
-  imagePreview: {
-    width: '100%',
-    height: hp(60),
-  },
+  imagePreview: { width: '100%', height: hp(60) },
   removeImageBtn: {
     position: 'absolute',
     top: 10,
@@ -217,26 +268,16 @@ postButton: {
     alignItems: 'center',
     borderTopWidth: 0.5,
     borderTopColor: '#eee',
+    paddingVertical: hp(2),
     marginTop: 'auto',
   },
-  leftTools: {
-    flexDirection: 'row',
-    gap: wp(6),
-  },
-  toolBtn: {
-    padding: 8,
-  },
-  charCounter: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
+  leftTools: { flexDirection: 'row', gap: wp(6) },
+  toolBtn: { padding: 8 },
+  charCounter: { flexDirection: 'row', alignItems: 'center' },
   counterText: {
     fontSize: hp(2.2),
     fontFamily: theme.fonts.bold,
     color: '#777',
   },
-  limitText: {
-    fontSize: hp(2),
-    color: '#aaa',
-  },
+  limitText: { fontSize: hp(2), color: '#aaa' },
 });

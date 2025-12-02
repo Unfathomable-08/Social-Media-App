@@ -94,7 +94,7 @@ export default function Signup() {
           {/* Name Field */}
           <Input
             icon={<Icon name="user" size={26} color={theme.colors.textLight} />}
-            placeholder="Enter your name"
+            placeholder="Create a username"
             onChangeText={(text) => (nameRef.current = text)}
           />
 

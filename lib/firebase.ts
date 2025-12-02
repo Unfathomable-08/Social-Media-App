@@ -3,6 +3,7 @@ import { initializeApp, getApps, getApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
+import { getDatabase } from "firebase/database";
 import { getAnalytics, isSupported } from "firebase/analytics";
 
 let app: any = null;
@@ -16,6 +17,7 @@ if (typeof window !== "undefined") {
     messagingSenderId: process.env.EXPO_PUBLIC_FIREBASE_SENDER_ID,
     appId: process.env.EXPO_PUBLIC_FIREBASE_APP_ID,
     measurementId: process.env.EXPO_PUBLIC_FIREBASE_MESUREMENT_ID,
+    databaseURL: "https://vibely-social-media-default-rtdb.asia-southeast1.firebasedatabase.app",
   };
 
   if (!getApps().length) {
@@ -27,6 +29,7 @@ if (typeof window !== "undefined") {
 
 export const auth = app ? getAuth(app) : null;
 export const db = app ? getFirestore(app) : null;
+export const rtdb = app ? getDatabase(app) : null;
 export const storage = app ? getStorage(app) : null;
 
 // Function to get analytics safely

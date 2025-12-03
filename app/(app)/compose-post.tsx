@@ -10,6 +10,7 @@ import {
   Platform,
   Image,
   ActivityIndicator,
+  ScrollView,
 } from "react-native";
 import { useRouter } from "expo-router";
 import ScreenWrapper from "@/components/ScreenWrapper";
@@ -19,11 +20,12 @@ import Icon from "@/assets/icons";
 import { Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
 import * as ImagePicker from "expo-image-picker";
-import * as FileSystem from 'expo-file-system/legacy';
+import * as FileSystem from "expo-file-system/legacy";
 import axios from "axios";
 import { createPost } from "@/utils/post";
+import { useAuth } from "@/contexts/authContext";
 
-const MAX_CHARS = 500;
+const MAX_CHARS = 380;
 const IMGBB_API_KEY = process.env.EXPO_PUBLIC_IMGBB_API_KEY;
 
 export default function CreatePost() {
@@ -31,6 +33,7 @@ export default function CreatePost() {
   const [text, setText] = useState("");
   const [image, setImage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const { user } = useAuth();
 
   const isOverLimit = text.length > MAX_CHARS;
   const isEmpty = text.trim().length === 0;
@@ -40,7 +43,6 @@ export default function CreatePost() {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      aspect: [4, 3],
       quality: 0.8,
     });
 
@@ -98,14 +100,14 @@ export default function CreatePost() {
 
   return (
     <ScreenWrapper bg="#fff">
-      <StatusBar barStyle="dark-content" />
+      <StatusBar barStyle="dark" />
       <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        behavior={Platform.OS === "ios" ? "padding" : undefined}
         style={{ flex: 1 }}
       >
         {/* Header */}
         <View style={styles.header}>
-          <Pressable onPress={() => router.back()} hitSlop={10}>
+          <Pressable onPress={() => router.replace('/(app)/home')} hitSlop={10}>
             <Text style={styles.cancelText}>Cancel</Text>
           </Pressable>
 
@@ -129,54 +131,69 @@ export default function CreatePost() {
           </Pressable>
         </View>
 
-        <View style={styles.container}>
-          {/* User Row */}
-          <View style={styles.userRow}>
-            <View style={styles.avatar}>
-              <Icon
-                name="user"
-                size={32}
-                color={theme.colors.primary}
-                strokeWidth={2.5}
-              />
+        {/* Main content */}
+        <View style={{ flex: 1 }}>
+          <ScrollView
+            contentContainerStyle={{
+              paddingHorizontal: wp(5),
+              paddingTop: hp(3),
+              paddingBottom: hp(3),
+            }}
+            keyboardShouldPersistTaps="handled"
+          >
+            {/* User Row */}
+            <View style={styles.userRow}>
+              <View style={styles.avatar}>
+                <Icon
+                  name="user"
+                  size={26}
+                  color={theme.colors.primary}
+                  strokeWidth={1.8}
+                />
+              </View>
+              <Text style={styles.username}>{ user?.username || "You" }</Text>
             </View>
-            <Text style={styles.username}>You</Text>
-          </View>
 
-          {/* Text Input */}
-          <TextInput
-            style={[styles.textInput, isOverLimit && styles.textInputError]}
-            placeholder="What's on your mind?"
-            placeholderTextColor="#888"
-            multiline
-            value={text}
-            onChangeText={setText}
-            textAlignVertical="top"
-            autoFocus
-          />
+            {/* Text Input */}
+            <TextInput
+              style={[styles.textInput, isOverLimit && styles.textInputError]}
+              placeholder="What's on your mind?"
+              placeholderTextColor="#888"
+              multiline
+              value={text}
+              onChangeText={setText}
+              textAlignVertical="top"
+              autoFocus
+            />
 
-          {/* Image Preview */}
-          {image && (
-            <View style={styles.imageContainer}>
-              <Image
-                source={{ uri: image }}
-                style={styles.previewImage}
-                resizeMode="cover"
-              />
-              <Pressable onPress={removeImage} style={styles.removeBtn}>
-                <Ionicons name="close" size={20} color="#fff" strokeWidth={3} />
-              </Pressable>
-            </View>
-          )}
+            {/* Image Preview */}
+            {image && (
+              <View style={styles.imageContainer}>
+                <Image
+                  source={{ uri: image }}
+                  style={styles.previewImage}
+                  resizeMode="cover"
+                />
+                <Pressable onPress={removeImage} style={styles.removeBtn}>
+                  <Ionicons
+                    name="close"
+                    size={20}
+                    color="#fff"
+                    strokeWidth={3}
+                  />
+                </Pressable>
+              </View>
+            )}
+          </ScrollView>
 
-          {/* Bottom Toolbar */}
+          {/* Bottom Toolbar pinned */}
           <View style={styles.toolbar}>
             <Pressable onPress={pickImage} style={styles.iconBtn}>
               <Icon
                 name="image"
                 size={28}
                 color={theme.colors.primary}
-                strokeWidth={2.5}
+                strokeWidth={1.5}
               />
               <Text style={styles.iconLabel}>Photo</Text>
             </Pressable>
@@ -187,9 +204,9 @@ export default function CreatePost() {
                   styles.count,
                   {
                     color:
-                      text.length > 400
+                      text.length > 300
                         ? "#e0245e"
-                        : text.length > 300
+                        : text.length > 200
                         ? "#ffad1f"
                         : "#666",
                   },
@@ -218,11 +235,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     borderBottomWidth: 1,
     borderBottomColor: "#f0f0f0",
-    elevation: 4,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
   },
   cancelText: {
     fontSize: hp(2.2),
@@ -231,10 +243,10 @@ const styles = StyleSheet.create({
   },
   postButton: {
     backgroundColor: theme.colors.primary,
-    paddingHorizontal: wp(7),
-    paddingVertical: hp(1.4),
+    paddingHorizontal: wp(5),
+    paddingVertical: hp(1),
     borderRadius: 30,
-    minWidth: wp(25),
+    minWidth: wp(22),
     alignItems: "center",
   },
   postButtonDisabled: {
@@ -252,7 +264,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: wp(5),
-    paddingTop: hp(3),
   },
   userRow: {
     flexDirection: "row",
@@ -261,8 +272,8 @@ const styles = StyleSheet.create({
     gap: wp(3),
   },
   avatar: {
-    width: hp(6.5),
-    height: hp(6.5),
+    width: hp(5.5),
+    height: hp(5.5),
     borderRadius: hp(4),
     backgroundColor: "#f5f5f5",
     justifyContent: "center",
@@ -277,7 +288,7 @@ const styles = StyleSheet.create({
   },
 
   textInput: {
-    fontSize: hp(2.7),
+    fontSize: hp(2.4),
     color: theme.colors.text,
     lineHeight: hp(3.8),
     paddingHorizontal: wp(1),
@@ -304,7 +315,7 @@ const styles = StyleSheet.create({
   },
   previewImage: {
     width: wp(90),
-    height: hp(50),
+    aspectRatio: "4/3",
   },
   removeBtn: {
     position: "absolute",
@@ -323,10 +334,11 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     paddingTop: hp(3),
-    paddingBottom: hp(4),
     borderTopWidth: 1,
     borderTopColor: "#f0f0f0",
     marginTop: "auto",
+    marginBottom: hp(10),
+    paddingHorizontal: wp(5)
   },
   iconBtn: {
     flexDirection: "row",

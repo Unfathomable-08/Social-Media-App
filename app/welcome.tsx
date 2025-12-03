@@ -9,7 +9,7 @@ export default function Welcome(){
    
    return (
       <View style={styles.container}>
-         <StatusBar style="light" />
+         <StatusBar style="dark" />
         <View style={styles.container}>
             <Image
                source={require('../assets/images/welcome.png')}

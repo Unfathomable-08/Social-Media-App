@@ -63,7 +63,7 @@ export default function Signup() {
 
   return (
     <ScreenWrapper bg="white">
-      <StatusBar barStyle="dark-content" />
+      <StatusBar barStyle="dark" />
 
       {/* Back Button */}
       <Pressable onPress={() => router.back()} style={styles.backButton}>

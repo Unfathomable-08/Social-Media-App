@@ -1,8 +1,8 @@
-import { View, Text, Image, StyleSheet, StatusBar, Pressable } from 'react-native'
-import { wp, hp } from '../helpers/common';
-import { theme } from '../constants/theme';
-import Button from '../components/Button';  
 import { useRouter } from 'expo-router';
+import { Image, Pressable, StatusBar, StyleSheet, Text, View } from 'react-native';
+import Button from '@/components//ui/Button';
+import { theme } from '@/constants/theme';
+import { hp, wp } from '@/utils/common';
 
 export default function Welcome(){
    const router = useRouter();
@@ -12,7 +12,7 @@ export default function Welcome(){
          <StatusBar style="dark" />
         <View style={styles.container}>
             <Image
-               source={require('../assets/images/welcome.png')}
+               source={require('@/assets/images/welcome.png')}
                style={styles.welcomeImage}
                resizeMode='contain'
             />

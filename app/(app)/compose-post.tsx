@@ -1,29 +1,29 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  StatusBar,
-  Pressable,
-  TextInput,
-  Alert,
-  KeyboardAvoidingView,
-  Platform,
-  Image,
-  ActivityIndicator,
-  ScrollView,
-} from "react-native";
-import { useRouter } from "expo-router";
-import ScreenWrapper from "@/components/ScreenWrapper";
-import { theme } from "@/constants/theme";
-import { hp, wp } from "@/helpers/common";
 import Icon from "@/assets/icons";
-import { Ionicons } from "@expo/vector-icons";
-import { useState } from "react";
-import * as ImagePicker from "expo-image-picker";
-import * as FileSystem from "expo-file-system/legacy";
-import axios from "axios";
-import { createPost } from "@/utils/post";
+import ScreenWrapper from "@/components/ui/ScreenWrapper";
+import { theme } from "@/constants/theme";
 import { useAuth } from "@/contexts/authContext";
+import { hp, wp } from "@/utils/common";
+import { createPost } from "@/utils/post";
+import { Ionicons } from "@expo/vector-icons";
+import axios from "axios";
+import * as FileSystem from "expo-file-system/legacy";
+import * as ImagePicker from "expo-image-picker";
+import { useRouter } from "expo-router";
+import { useState } from "react";
+import {
+    ActivityIndicator,
+    Alert,
+    Image,
+    KeyboardAvoidingView,
+    Platform,
+    Pressable,
+    ScrollView,
+    StatusBar,
+    StyleSheet,
+    Text,
+    TextInput,
+    View,
+} from "react-native";
 
 const MAX_CHARS = 380;
 const IMGBB_API_KEY = process.env.EXPO_PUBLIC_IMGBB_API_KEY;

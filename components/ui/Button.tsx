@@ -1,6 +1,6 @@
-import { View, Text, Pressable, StyleSheet, ActivityIndicator } from 'react-native'
-import { theme } from '../constants/theme'
-import { wp, hp } from '../helpers/common'
+import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native'
+import { theme } from '@/constants/theme'
+import { hp } from '@/utils/common'
 
 const Button = ({
   buttonStyle,

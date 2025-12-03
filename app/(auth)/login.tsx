@@ -1,14 +1,14 @@
 // app/login.tsx (or wherever you have it)
-import { View, Text, StyleSheet, StatusBar, Pressable, Alert } from 'react-native';
+import Icon from '@/assets/icons';
+import Button from '@/components/ui/Button';
+import Input from '@/components/ui/Input';
+import ScreenWrapper from '@/components/ui/ScreenWrapper';
+import { theme } from '@/constants/theme';
+import { signIn } from '@/utils/auth';
+import { hp, wp } from '@/utils/common';
 import { useRouter } from 'expo-router';
 import { useRef, useState } from 'react';
-import { theme } from '../../constants/theme';
-import { hp, wp } from '../../helpers/common';
-import Button from '../../components/Button';
-import Input from '../../components/Input';
-import ScreenWrapper from '../../components/ScreenWrapper';
-import Icon from '../../assets/icons';
-import { signIn } from '@/utils/auth';
+import { Alert, Pressable, StatusBar, StyleSheet, Text, View } from 'react-native';
 
 export default function Login() {
   const router = useRouter();

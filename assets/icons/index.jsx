@@ -1,26 +1,25 @@
-import { View, Text } from 'react-native'
-import React from 'react'
-import Home from './Home';
-import Mail from './Mail';
-import Lock from './Lock';
-import User from './User';
+import { theme } from '@/constants/theme';
+import React from 'react';
+import ArrowLeft from './ArrowLeft';
+import Call from './Call';
+import Camera from './Camera';
+import Comment from './Comment';
+import Delete from './Delete';
+import Edit from './Edit';
 import Heart from './Heart';
+import Home from './Home';
+import Image from './Image';
+import Location from './Location';
+import Lock from './Lock';
+import Logout from './logout';
+import Mail from './Mail';
 import Plus from './Plus';
 import Search from './Search';
-import Location from './Location';
-import Call from './Call';
-import { theme } from '../../constants/theme';
-import Camera from './Camera';
-import Edit from './Edit';
-import ArrowLeft from './ArrowLeft';
+import Send from './Send';
+import Share from './Share';
 import ThreeDotsCircle from './ThreeDotsCircle';
 import ThreeDotsHorizontal from './ThreeDotsHorizontal';
-import Comment from './Comment';
-import Share from './Share';
-import Send from './Send';
-import Delete from './Delete';
-import Logout from './logout';
-import Image from './Image';
+import User from './User';
 import Video from './Video';
 
 const icons = {

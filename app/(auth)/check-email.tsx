@@ -1,23 +1,22 @@
-import React, { useRef, useState, useEffect } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  StatusBar,
-  Pressable,
-  Alert,
-  TextInput,
-  Dimensions,
-  Keyboard,
-} from 'react-native';
-import { useRouter } from 'expo-router';
-import { theme } from '../../constants/theme';
-import { hp, wp } from '../../helpers/common';
-import Button from '../../components/Button';
-import ScreenWrapper from '../../components/ScreenWrapper';
-import Icon from '../../assets/icons';
-import { verifyCode, resendCode } from '@/utils/auth';
+import { resendCode, verifyCode } from '@/utils/auth';
 import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
+import React, { useEffect, useRef, useState } from 'react';
+import {
+    Alert,
+    Dimensions,
+    Keyboard,
+    Pressable,
+    StatusBar,
+    StyleSheet,
+    Text,
+    TextInput,
+    View,
+} from 'react-native';
+import Icon from '@/assets/icons';
+import ScreenWrapper from '@/components/ui/ScreenWrapper';
+import { theme } from '@/constants/theme';
+import { hp, wp } from '@/utils/common';
 
 const { width } = Dimensions.get('window');
 

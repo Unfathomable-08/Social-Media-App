@@ -12,7 +12,7 @@ const api = axios.create({
 // Add token to every request
 api.interceptors.request.use(async (config) => {
   const token = await AsyncStorage.getItem(TOKEN_KEY);
-  console.log(token)
+
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -48,7 +48,6 @@ export const createPost = async (data: {
 export const getAllPosts = async ( page: number = 1, limit: number = 20 ) => {
   try {
     const res = await api.get(`/?page=${page}&limit=${limit}`);
-    console.log('Posts response:', res)
     
     return res.data;
   }

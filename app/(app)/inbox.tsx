@@ -1,25 +1,23 @@
 // app/dm.tsx  → Pure Realtime Database (NOT Firestore)
-import React, { useEffect, useState, useRef } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  FlatList,
-  TextInput,
-  Pressable,
-  Image,
-  KeyboardAvoidingView,
-  Platform,
-  ActivityIndicator,
-} from "react-native";
-import ScreenWrapper from "../../components/ScreenWrapper";
-import { theme } from "../../constants/theme";
-import { hp, wp } from "../../helpers/common";
-import { auth } from "@/lib/firebase";
-import { rtdb } from "@/lib/firebase";
-import { ref, onValue, push, set, serverTimestamp } from "firebase/database";
+import { auth, rtdb } from "@/lib/firebase";
 import { Ionicons } from "@expo/vector-icons";
 import { onAuthStateChanged } from "firebase/auth";
+import { onValue, push, ref, set } from "firebase/database";
+import React, { useEffect, useRef, useState } from "react";
+import {
+    ActivityIndicator,
+    FlatList,
+    KeyboardAvoidingView,
+    Platform,
+    Pressable,
+    StyleSheet,
+    Text,
+    TextInput,
+    View
+} from "react-native";
+import ScreenWrapper from "@/components/ui/ScreenWrapper";
+import { theme } from "@/constants/theme";
+import { hp, wp } from "@/utils/common";
 
 // Fixed convo path — both users see the same chat
 const CONVO_PATH = "chats/m8374527_muhammad124711";

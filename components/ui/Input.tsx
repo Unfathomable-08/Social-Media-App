@@ -1,7 +1,6 @@
-// components/Input.tsx
-import { TextInput, StyleSheet, View } from 'react-native';
-import { theme } from '../constants/theme';
-import { hp } from '../helpers/common';
+import { StyleSheet, TextInput, View } from 'react-native';
+import { theme } from '@/constants/theme';
+import { hp } from '@/utils/common';
 
 const Input = (props) => {
   return (

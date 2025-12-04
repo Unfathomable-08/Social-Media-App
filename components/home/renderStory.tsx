@@ -1,6 +1,7 @@
 import { styles } from "@/styles/timeline";
 import { Text, View, Pressable, Image } from "react-native";
-import 
+import { Ionicons } from "@expo/vector-icons";
+import { theme } from "@/constants/theme";
 
 export const renderStory = ({ item }: any) => (
   <Pressable style={styles.storyItem}>

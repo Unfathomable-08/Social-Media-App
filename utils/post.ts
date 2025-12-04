@@ -44,7 +44,7 @@ export const createPost = async (data: {
 
 
 // ========== Get All Posts (pagination) ==========
-export const getFeed = async (cursor?: string, limit: number = 25) => {
+export const getFeed = async (cursor?: string, limit: number = 5) => {
   try {
     const params = new URLSearchParams();
     params.append("limit", limit.toString());
@@ -54,6 +54,7 @@ export const getFeed = async (cursor?: string, limit: number = 25) => {
     }
 
     const res = await api.get(`/feed?${params.toString()}`);
+    console.log(res.data)
 
     return {
       posts: res.data.posts || [],

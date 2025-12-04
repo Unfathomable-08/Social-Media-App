@@ -4,20 +4,20 @@ import { theme } from "@/constants/theme";
 import { useAuth } from "@/contexts/authContext";
 import { styles } from "@/styles/timeline";
 import { wp } from "@/utils/common";
-import { getAllPosts } from "@/utils/post";
-import { Ionicons } from "@expo/vector-icons";
+import { getFeed } from "@/utils/post";
 import { useRouter } from "expo-router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
-  Image,
   Pressable,
   StatusBar,
   Text,
   View,
+  Alert
 } from "react-native";
 import { renderPost } from "@/components/home/renderPost";
+import { renderStory } from "@/components/home/renderStory";
 
 export default function Home() {
   const router = useRouter();
@@ -53,11 +53,6 @@ export default function Home() {
       setRefreshing(false);
     }
   };
-
-  // Initial load
-  useEffect(() => {
-    if (user) loadFeed();
-  }, [user]);
 
   // Load more
   const onEndReached = () => {
@@ -140,8 +135,6 @@ export default function Home() {
         onRefresh={onRefresh}
         showsVerticalScrollIndicator={false}
         ListHeaderComponent={
-          <>
-            {/* Stories */}
             <View style={styles.storiesContainer}>
               <FlatList
                 data={stories}
@@ -152,7 +145,6 @@ export default function Home() {
                 contentContainerStyle={{ paddingHorizontal: wp(4) }}
               />
             </View>
-          </>
         }
         ListFooterComponent={loading && hasMore ? <ActivityIndicator style={{ margin: 20 }} /> : null}
       />

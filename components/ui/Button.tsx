@@ -41,10 +41,7 @@ const styles = StyleSheet.create({
      fontWeight: theme.fonts.bold
   },
   shadowStyle: {
-    shadowColor: theme.colors.dark,
-    shadowOffset: {width: 0, height: 10},
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
+    boxShadow: "0px 10px 8px rgba(0,0,0,0.2)",
   },
   loading: {
     flexDirection: 'row',

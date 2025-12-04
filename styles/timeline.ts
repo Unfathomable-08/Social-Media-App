@@ -136,9 +136,18 @@ export const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     elevation: 8,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 5,
+    boxShadow: "0px 4px 5px rgba(0,0,0,0.3)",
   },
+  avatarCircle: {
+    backgroundColor: theme.colors.primary + '2F',
+    width: 32,
+    height: 32,
+    borderRadius: '100%',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  avatarCircleText: {
+    textTransform: 'uppercase',
+    fontWeight: theme.fonts.medium
+  }
 });

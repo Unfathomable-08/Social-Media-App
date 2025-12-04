@@ -285,11 +285,10 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 
-  // Shake animation (using transform)
+  // Shake animation 
   shake: {
     borderColor: theme.colors.rose,
     borderWidth: 2.5,
-    animationName: 'shake',
   },
 
   // Actions

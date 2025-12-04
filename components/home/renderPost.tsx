@@ -14,12 +14,21 @@ export const renderPost = ({ item }: { item: any }) => {
       {/* Header */}
       <View style={styles.postHeader}>
         <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
-          <Image
-            source={{
-              uri: item.user?.avatar || "https://via.placeholder.com/60",
-            }}
-            style={styles.postAvatar}
-          />
+          {
+            item.user?.avatar ?
+            <Image
+              source={{
+                uri: item.user?.avatar,
+              }}
+              style={styles.postAvatar}
+            />
+            :
+            <View style={styles.avatarCircle}>
+              <Text style={styles.avatarCircleText}>
+                { item.user?.name?.split("")[0] || item.user?.username?.split("")[0] }
+              </Text>
+            </View>
+          }
           <View>
             <Text style={styles.postUsername}>
               {item.user?.username || "Unknown"}

@@ -307,10 +307,7 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     position: "relative",
     alignSelf: "flex-start",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.15,
-    shadowRadius: 10,
+    boxShadow: "0px 4px 10px rgba(0,0,0,0.15)",
     elevation: 8,
   },
   previewImage: {

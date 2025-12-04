@@ -207,6 +207,10 @@ export const signIn = async (login: string, password: string): Promise<User> => 
 export const getCurrentUser = async (): Promise<User | null> => {
   try {
     const res = await api.get<{ user: User }>("/me");
+
+    const token = res.data?.token;
+    if (token) await saveToken(token);
+    
     return res.data.user;
   } catch (error: any) {
     if (axios.isAxiosError(error) && error.response) {

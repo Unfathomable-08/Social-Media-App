@@ -4,8 +4,11 @@ import { Ionicons } from "@expo/vector-icons";
 import Icon from "@/assets/icons";
 import { useRouter } from "expo-router";
 import { theme } from "@/constants/theme";
+import { likePost } from "@/utils/postActions";
+import { useAuth } from "@/contexts/authContext";
 
 export const renderPost = ({ item }: { item: any }) => {
+  const { user } = useAuth();
   const router = useRouter();
   const hasImage = item.image && item.image.trim() !== "";
 
@@ -48,7 +51,7 @@ export const renderPost = ({ item }: { item: any }) => {
 
       {/* Body (Text + Optional Image) */}
       <View style={styles.postBody}>
-        {/* Caption / Text – always shown */}
+        {/* Text */}
         <Text style={styles.postText}>{item.content}</Text>
 
         {/* Image – only if it exists */}
@@ -63,8 +66,16 @@ export const renderPost = ({ item }: { item: any }) => {
 
       {/* Actions */}
       <View style={styles.postActions}>
-        <Pressable style={styles.actionButton}>
-          <Ionicons name="heart-outline" size={24} color={theme.colors.text} />
+        <Pressable 
+          style={styles.actionButton}
+          onPress={() => likePost(item._id)}
+        >
+          {
+            item.likes.includes(user?.id) ? 
+              <Icon name="heart" size={24} color={theme.colors.primary} />
+            :
+              <Ionicons name="heart-outline" size={24} color={theme.colors.text} />
+          }
           <Text style={styles.actionCount}>{item.likesCount}</Text>
         </Pressable>
 

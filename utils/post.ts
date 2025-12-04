@@ -18,6 +18,8 @@ api.interceptors.request.use(async (config) => {
   }
   return config;
 });
+
+
 // ========== Create Post ==========
 export const createPost = async (data: {
   content: string;
@@ -74,6 +76,7 @@ export const getFeed = async (cursor?: string, limit: number = 5) => {
     }
   }
 };
+
 
 // Helper function for initial feed load
 export const getFeedInitial = (limit = 25) => getFeed(undefined, limit);

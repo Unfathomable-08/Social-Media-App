@@ -91,6 +91,7 @@ export interface User {
   isVerified: boolean;
 }
 
+
 // ============== SIGN UP ==============
 export const signUp = async (
   email: string,
@@ -124,6 +125,7 @@ export const signUp = async (
   }
 };
 
+
 // ============== VERIFY CODE ==============
 export const verifyCode = async (code: string): Promise<{ message: string }> => {
   try {
@@ -146,6 +148,7 @@ export const verifyCode = async (code: string): Promise<{ message: string }> => 
   }
 };
 
+
 // ============== RESEND CODE ==============
 export const resendCode = async (): Promise<{ message: string }> => {
   try {
@@ -156,6 +159,7 @@ export const resendCode = async (): Promise<{ message: string }> => {
     throw new AuthError(message || "Failed to resend code", "RESEND_FAILED");
   }
 };
+
 
 // ============== LOGIN ==============
 export const signIn = async (login: string, password: string): Promise<User> => {
@@ -202,6 +206,7 @@ export const signIn = async (login: string, password: string): Promise<User> => 
     throw new AuthError(message || "Login failed", "LOGIN_FAILED");
   }
 };
+
 
 // ============== GET CURRENT USER ==============
 export const getCurrentUser = async (): Promise<User | null> => {

@@ -5,6 +5,7 @@ import { RenderComment } from "@/components/home/renderComment";
 import { theme } from "@/constants/theme";
 import { useAuth } from "@/contexts/authContext";
 import { getPost } from "@/utils/post";
+import { loadComments } from "@/utils/postActions";
 import { hp, wp } from "@/utils/common";
 import { likePost } from "@/utils/postActions";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -33,8 +34,10 @@ export default function PostDetail() {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const res = await getPost(id);
-      setPost(res.post);
+      const postData = await getPost(id);
+      const commentsData = await loadComments(id)
+      setPost(postData.post);
+      setComments(commentsData.comments)
     } catch (error: any) {
       Alert.alert("Error", error.message);
       console.error("Error fetching post:", error);
@@ -103,7 +106,7 @@ export default function PostDetail() {
         ListHeaderComponent={
           <View style={{ paddingBottom: hp(2) }}>
             {/* Main Post */}
-            <View style={styles.postContainer}>
+            <View>
               <View style={styles.postHeader}>
                 <Pressable
                   onPress={() => router.push(`/`)}

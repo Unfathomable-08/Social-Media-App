@@ -126,11 +126,6 @@ export default function VerifyEmail() {
     <ScreenWrapper bg="white">
       <StatusBar barStyle="dark-content" />
 
-      {/* Back button – untouched */}
-      <Pressable onPress={() => router.back()} style={styles.backButton} disabled={loading}>
-        <Icon name="arrowLeft" size={26} color={theme.colors.text} strokeWidth={2.5} />
-      </Pressable>
-
       <View style={styles.container}>
         {/* Header */}
         <View style={styles.header}>

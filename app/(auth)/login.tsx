@@ -7,8 +7,8 @@ import { theme } from '@/constants/theme';
 import { signIn } from '@/utils/auth';
 import { hp, wp } from '@/utils/common';
 import { useRouter } from 'expo-router';
-import { useRef, useState } from 'react';
-import { Alert, Pressable, StatusBar, StyleSheet, Text, View } from 'react-native';
+import React, { useRef, useState } from 'react';
+import { Alert, Pressable, StatusBar, StyleSheet, Text, TextStyle, View } from 'react-native';
 
 export default function Login() {
   const router = useRouter();
@@ -64,12 +64,7 @@ export default function Login() {
 
   return (
     <ScreenWrapper bg="white">
-      <StatusBar barStyle="dark" />
-
-      {/* Back Button */}
-      <Pressable onPress={() => router.back()} style={styles.backButton}>
-        <Icon name="arrowLeft" size={26} color={theme.colors.text} strokeWidth={2.5} />
-      </Pressable>
+      <StatusBar barStyle="light-content" />
 
       <View style={styles.container}>
         {/* Header */}
@@ -84,13 +79,13 @@ export default function Login() {
             icon={<Icon name="mail" size={26} color={theme.colors.textLight} />}
             placeholder="Enter your email"
             keyboardType="email-address"
-            onChangeText={(text) => (emailRef.current = text)}
+            onChangeText={(text: string) => (emailRef.current = text)}
           />
           <Input
             icon={<Icon name="lock" size={26} color={theme.colors.textLight} />}
             placeholder="Enter your password"
             secureTextEntry
-            onChangeText={(text) => (passwordRef.current = text)}
+            onChangeText={(text: string) => (passwordRef.current = text)}
           />
 
           <Pressable style={styles.forgotPassword}>
@@ -136,13 +131,13 @@ const styles = StyleSheet.create({
     color: theme.colors.text,
     fontFamily: theme.fonts.medium,
     fontWeight: theme.fonts.medium
-  },
+  } as TextStyle,
   title: {
     fontSize: hp(4),
     color: theme.colors.primary,
     fontFamily: theme.fonts.extraBold,
     fontWeight: theme.fonts.extraBold
-  },
+  } as TextStyle,
   form: {
     gap: 20,
     marginTop: hp(4),

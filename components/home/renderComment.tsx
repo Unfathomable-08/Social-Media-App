@@ -1,4 +1,5 @@
 import Icon from "@/assets/icons";
+import { Ionicons } from "@expo/vector-icons";
 import { theme } from "@/constants/theme";
 import { wp } from "@/utils/common";
 import { useRouter } from "expo-router";
@@ -13,8 +14,9 @@ interface CommentProps {
     image?: string;
     user: {
       _id: string;
-      name: string;
+      name?: string;
       image?: string;
+      username: string
     };
     createdAt: string;
     likes: string[];
@@ -36,7 +38,8 @@ export const RenderComment = ({ item, currentUserId }: CommentProps) => {
 
   return (
     <View style={styles.commentContainer}>
-      <Pressable onPress={() => router.push(`/profile/${item.user._id}`)}>
+      {/* Avatar */}
+      <Pressable onPress={() => router.push(`/`)}>
         <Image
           source={
             item.user.image
@@ -47,19 +50,27 @@ export const RenderComment = ({ item, currentUserId }: CommentProps) => {
         />
       </Pressable>
 
-      <View style={styles.commentContent}>
-        <View style={styles.commentBubble}>
-          <Pressable onPress={() => router.push(`/profile/${item.user._id}`)}>
-            <Text style={styles.commentName}>{item.user.name}</Text>
+      {/* Right Column */}
+      <View style={styles.commentRight}>
+        {/* Name + Username + Time */}
+        <View style={styles.commentHeader}>
+          <Pressable onPress={() => router.push(`/`)}>
+            <Text style={styles.commentName}>{item.user.name || "Anonymous"}</Text>
           </Pressable>
-          <Text style={styles.commentText}>{item.content}</Text>
-          {item.image && (
-            <Image source={{ uri: item.image }} style={styles.commentImage} />
-          )}
+          <Text style={styles.commentUsername}>@{item.user.username}</Text>
+          <Text style={styles.commentTime}>· {timeAgo(item.createdAt)}</Text>
         </View>
 
+        {/* Comment Text */}
+        <Text style={styles.commentText}>{item.content}</Text>
+
+        {/* Optional Comment Image */}
+        {item.image && (
+          <Image source={{ uri: item.image }} style={styles.commentImage} />
+        )}
+
+        {/* Actions */}
         <View style={styles.commentActions}>
-          <Text style={styles.commentTime}>{timeAgo(item.createdAt)}</Text>
           <Pressable style={styles.actionButton}>
             <Icon name="heart" size={18} color={theme.colors.textLight} />
             <Text style={styles.actionCount}>
@@ -67,7 +78,7 @@ export const RenderComment = ({ item, currentUserId }: CommentProps) => {
             </Text>
           </Pressable>
           <Pressable style={styles.actionButton}>
-            <Icon name="messageCircle" size={18} color={theme.colors.textLight} />
+            <Icon name="comment" size={18} color={theme.colors.textLight} />
           </Pressable>
         </View>
       </View>

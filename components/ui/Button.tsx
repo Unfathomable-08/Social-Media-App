@@ -1,10 +1,11 @@
-import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native'
+import { ActivityIndicator, Pressable, StyleSheet, Text, TextStyle, View } from 'react-native'
 import { theme } from '@/constants/theme'
 import { hp } from '@/utils/common'
+import React from 'react'
 
 const Button = ({
-  buttonStyle,
-  textStyle,
+  buttonStyle = {},
+  textStyle = {},
   title = '',
   onPress = () => {},
   loading = false,
@@ -39,7 +40,7 @@ const styles = StyleSheet.create({
      fontSize: hp(2.5),
      color: '#ffffff',
      fontWeight: theme.fonts.bold
-  },
+  } as TextStyle,
   shadowStyle: {
     boxShadow: "0px 10px 8px rgba(0,0,0,0.2)",
   },

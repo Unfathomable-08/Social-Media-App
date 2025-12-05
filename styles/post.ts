@@ -3,20 +3,18 @@ import { hp, wp } from "@/utils/common";
 import { StyleSheet, TextStyle } from "react-native";
 
 export const styles = StyleSheet.create({
-  postContainer: {
-    padding: wp(4),
-  },
   postHeader: {
     flexDirection: "row",
     alignItems: "center",
     gap: wp(3),
-    marginBottom: hp(2)
+    marginBottom: hp(2),
+    paddingHorizontal: wp(4),
   },
   headerTitle: {
     fontSize: hp(2.6),
-    fontWeight: "700",
+    fontWeight: theme.fonts.bold,
     color: theme.colors.text,
-  },
+  } as TextStyle,
   backButton: {
     padding: 5,
     borderRadius: 20,
@@ -51,10 +49,10 @@ export const styles = StyleSheet.create({
     borderRadius: 25,
   },
   postName: {
-    fontWeight: "700",
+    fontWeight: theme.fonts.bold,
     fontSize: hp(2.1),
     color: theme.colors.text,
-  },
+  } as TextStyle,
   postUsername: {
     color: theme.colors.textLight,
     fontSize: hp(1.9),
@@ -62,7 +60,7 @@ export const styles = StyleSheet.create({
   postname: {
     color: theme.colors.dark,
     fontSize: hp(2.2),
-    fontWeight: theme.fonts.semibold
+    fontWeight: theme.fonts.semibold,
   } as TextStyle,
   postTime: {
     color: theme.colors.textLight,
@@ -73,6 +71,7 @@ export const styles = StyleSheet.create({
     marginTop: hp(2),
     lineHeight: hp(3),
     color: theme.colors.text,
+    paddingHorizontal: wp(4),
   },
   postImage: {
     width: "100%",
@@ -85,6 +84,11 @@ export const styles = StyleSheet.create({
     gap: wp(7),
     marginTop: hp(2.5),
     alignItems: "center",
+    borderColor: theme.colors.textLight + "4F",
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    paddingHorizontal: wp(4),
+    paddingVertical: 6,
   },
   repliesTitle: {
     paddingHorizontal: wp(4),
@@ -111,8 +115,58 @@ export const styles = StyleSheet.create({
     gap: 4,
   },
   actionCount: {
-    fontSize: hp(1.7),
+    fontSize: hp(2),
     color: theme.colors.textLight,
-    fontWeight: "600",
+  },
+  commentContainer: {
+    flexDirection: "row", // Avatar left, content right
+    paddingHorizontal: wp(4),
+    paddingVertical: hp(2),
+    alignItems: "flex-start",
+    gap: wp(6),
+  },
+  commentRight: {
+    flex: 1, // take remaining width
+  },
+  commentHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: wp(2),
+  },
+  commentAvatar: {
+    width: 40,
+    height: 40,
+    borderRadius: 25,
+  },
+  commentName: {
+    fontWeight: theme.fonts.semibold,
+    fontSize: hp(2.1),
+    color: theme.colors.text,
+  } as TextStyle,
+  commentUsername: {
+    color: theme.colors.textLight,
+    fontSize: hp(1.9),
+  },
+  commentTime: {
+    color: theme.colors.textLight,
+    fontSize: hp(1.8),
+  },
+  commentText: {
+    fontSize: hp(2.1),
+    lineHeight: hp(3),
+    color: theme.colors.text,
+    marginTop: hp(0.5),
+  },
+  commentImage: {
+    width: "100%",
+    aspectRatio: 4 / 3,
+    borderRadius: 16,
+    marginTop: hp(1.5),
+  },
+  commentActions: {
+    flexDirection: "row",
+    gap: wp(7),
+    marginTop: hp(1.5),
+    alignItems: "center",
   },
 });

@@ -39,3 +39,63 @@ export const likePost = async (postId: string) => {
     }
   }
 }
+
+// ========== Load Comment ==========
+export const loadComments = async (postId: string) => {
+  try {
+    const res = await api.get(`/${postId}/comments`);
+    console.log(res.data)
+
+    return res.data;
+  } catch (error: any) {
+    console.error("Error loading comments:", error);
+
+    if (error.response){
+      throw new Error(error.response.data.message || "Failed to load comments");
+    } else if (error.request){
+      throw new Error("No response from server. Check your internet connection.");
+    } else {
+      throw new Error(error.message || "An unexpected error occurred");
+    }
+  }
+}
+
+// ========== Add Comment ==========
+export const addComment = async (postId: string, content: string) => {
+  try {
+    const res = await api.post(`/${postId}/comments`, { content });
+    console.log(res.data)
+
+    return res.data;
+  } catch (error: any) {
+    console.error("Error adding comment:", error);
+
+    if (error.response) {
+      throw new Error(error.response.data.message || "Failed to add comment");
+    } else if (error.request) {
+      throw new Error("No response from server. Check your internet connection.");
+    } else {
+      throw new Error(error.message || "An unexpected error occurred");
+    }
+  }
+}
+
+// ========== Delete Comment ==========
+export const deleteComment = async (postId: string, commentId: string) => {
+  try {
+    const res = await api.delete(`/${postId}/comments/${commentId}`);
+    console.log(res.data)
+
+    return res.data;
+  } catch (error: any) {
+    console.error("Error deleting comment:", error);
+
+    if (error.response){
+      throw new Error(error.response.data.message || "Failed to delete comment");
+    } else if (error.request){
+      throw new Error("No response from server. Check your internet connection.");
+    } else {
+      throw new Error(error.message || "An unexpected error occurred");
+    }
+  }
+}

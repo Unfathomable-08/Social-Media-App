@@ -7,30 +7,62 @@ import { theme } from "@/constants/theme";
 import { likePost } from "@/utils/postActions";
 import { User } from "@/utils/auth";
 
-export const RenderPost = ({ item, user, setPosts }: { \ }) => {
+export const RenderPost = ({
+  item,
+  user,
+  setPosts,
+}: {
+  item: any;
+  user: User | null;
+  setPosts: React.Dispatch<React.SetStateAction<any[]>>;
+}) => {
   const router = useRouter();
   const hasImage = item.image && item.image.trim() !== "";
+
+  const postLikeFn = (id: any) => {
+    try {
+      setPosts((prev) =>
+        prev.map((p) => {
+          if (p._id !== id) return p;
+          
+          const alreadyLiked = p.likes.includes(user?.id);
+          
+          return {
+            ...p,
+            likes: alreadyLiked
+            ? p.likes.filter((l: string) => l !== user?.id)
+              : [...p.likes, user?.id],
+            likesCount: alreadyLiked ? p.likesCount - 1 : p.likesCount + 1,
+          };
+        })
+      );
+      
+      likePost(id);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <View style={styles.postContainer}>
       {/* Header */}
       <View style={styles.postHeader}>
         <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
-          {
-            item.user?.avatar ?
+          {item.user?.avatar ? (
             <Image
               source={{
                 uri: item.user?.avatar,
               }}
               style={styles.postAvatar}
             />
-            :
+          ) : (
             <View style={styles.avatarCircle}>
               <Text style={styles.avatarCircleText}>
-                { item.user?.name?.split("")[0] || item.user?.username?.split("")[0] }
+                {item.user?.name?.split("")[0] ||
+                  item.user?.username?.split("")[0]}
               </Text>
             </View>
-          }
+          )}
           <View>
             <Text style={styles.postUsername}>
               {item.user?.username || "Unknown"}
@@ -65,16 +97,19 @@ export const RenderPost = ({ item, user, setPosts }: { \ }) => {
 
       {/* Actions */}
       <View style={styles.postActions}>
-        <Pressable 
+        <Pressable
           style={styles.actionButton}
-          onPress={() => likePost(item._id)}
+          onPress={() => postLikeFn(item._id)}
         >
-          {
-            item.likes.includes(user?.id) ? 
-              <Ionicons name="heart" size={24} color={theme.colors.primary} />
-            :
-              <Ionicons name="heart-outline" size={24} color={theme.colors.text} />
-          }
+          {item.likes.includes(user?.id) ? (
+            <Ionicons name="heart" size={24} color={theme.colors.primary} />
+          ) : (
+            <Ionicons
+              name="heart-outline"
+              size={24}
+              color={theme.colors.text}
+            />
+          )}
           <Text style={styles.actionCount}>{item.likesCount}</Text>
         </Pressable>
 

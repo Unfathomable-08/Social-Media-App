@@ -1,6 +1,7 @@
 import { Stack, Redirect } from "expo-router";
 import { useAuth } from "@/contexts/authContext";
 import { ActivityIndicator, View } from "react-native";
+import { theme } from "@/constants/theme";
 
 export default function AppLayout() {
   const { user, isLoading } = useAuth();
@@ -8,7 +9,7 @@ export default function AppLayout() {
   if (isLoading) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size="large" color="#000" />
+        <ActivityIndicator size="large" color={theme.colors.primary} />
       </View>
     );
   }

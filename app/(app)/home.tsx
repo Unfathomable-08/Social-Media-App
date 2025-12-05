@@ -99,7 +99,7 @@ export default function Home() {
   if (isLoading) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size="large" />
+        <ActivityIndicator size="large" color={theme.colors.primary} />
       </View>
     );
   }
@@ -146,7 +146,7 @@ export default function Home() {
               />
             </View>
         }
-        ListFooterComponent={loading && hasMore ? <ActivityIndicator style={{ margin: 20 }} /> : null}
+        ListFooterComponent={loading && hasMore ? <ActivityIndicator style={{ margin: 20 }} color={theme.colors.primary} /> : null}
       />
 
       {/* Floating Action Button */}

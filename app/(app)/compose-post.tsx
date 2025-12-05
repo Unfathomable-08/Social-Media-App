@@ -117,7 +117,7 @@ export default function CreatePost() {
             disabled={isDisabled}
           >
             {loading ? (
-              <ActivityIndicator color="#fff" />
+              <ActivityIndicator color={theme.colors.primary} />
             ) : (
               <Text
                 style={[

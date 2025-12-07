@@ -41,7 +41,7 @@ export default function Login() {
           [
             {
               text: 'Resend Email',
-              onPress: () => router.replace('/(auth)/check-email'),
+              onPress: () => router.push('/(auth)/check-email'),
             },
             { text: 'Cancel', style: 'cancel' },
           ]

@@ -90,7 +90,7 @@ export default function PostDetail() {
     <ScreenWrapper bg="#fff">
       {/* Header */}
       <View style={styles.postHeader}>
-        <Pressable onPress={() => router.back()} style={styles.backButton}>
+        <Pressable onPress={() => router.replace('/(app)/home')} style={styles.backButton}>
           <Icon name="arrowLeft" size={24} color={theme.colors.text} />
         </Pressable>
         <Text style={styles.headerTitle}>Post</Text>
@@ -145,7 +145,7 @@ export default function PostDetail() {
               )}
 
               <View style={styles.postActions}>
-                <Pressable onPress={() => router.replace(`/(app)/comment/${post._id}`)} style={styles.actionButton}>
+                <Pressable onPress={() => router.push(`/(app)/comment/${post._id}`)} style={styles.actionButton}>
                   <Icon
                     name="comment"
                     size={22}

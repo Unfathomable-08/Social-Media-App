@@ -145,7 +145,7 @@ export default function PostDetail() {
               )}
 
               <View style={styles.postActions}>
-                <Pressable style={styles.actionButton}>
+                <Pressable onPress={() => router.replace(`/(app)/comment/${post._id}`)} style={styles.actionButton}>
                   <Icon
                     name="comment"
                     size={22}

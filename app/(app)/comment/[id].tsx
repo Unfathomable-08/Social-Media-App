@@ -5,6 +5,7 @@ import { useAuth } from "@/contexts/authContext";
 import { hp, wp } from "@/utils/common";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import React, { useState } from "react";
+import { addComment } from "@/utils/postActions";
 import { styles } from "@/styles/composePost";
 import {
     ActivityIndicator,
@@ -35,17 +36,16 @@ export default function WriteComment() {
 
     const handlePost = async () => {
         if (isDisabled) return;
-
+        
         setLoading(true);
 
         try {
-
-            // await createPost({
-            //     content: text.trim(),
-            //     image: imageUrl,
-            //     isPublic: true,
-            // });
-
+            
+            await addComment(
+                Array.isArray(id) ? id[0] : id, //typescript err
+                text.trim(),
+            );
+            
             Alert.alert("Success", "Your post is live!", [
                 { text: "Done", onPress: () => router.replace("/(app)/home") },
             ]);

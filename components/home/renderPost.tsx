@@ -120,7 +120,7 @@ export const RenderPost = ({
 
         <Pressable
           style={styles.actionButton}
-          onPress={() => router.push(`/post/${item._id}`)}
+          onPress={() => router.push(`/(app)/comment/${item._id}`)}
         >
           <Icon
             name="comment"

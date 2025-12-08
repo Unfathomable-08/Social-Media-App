@@ -2,97 +2,143 @@ import Icon from "@/assets/icons";
 import ScreenWrapper from "@/components/ui/ScreenWrapper";
 import { theme } from "@/constants/theme";
 import { useAuth } from "@/contexts/authContext";
-import { hp, wp } from "@/utils/common";
+import { wp, hp } from "@/utils/common";
 import { useRouter } from "expo-router";
-import React from "react";
-import { FlatList, Image, Pressable, Text, View } from "react-native";
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  FlatList,
+  Pressable,
+  Image,
+  StatusBar,
+  TouchableOpacity,
+} from "react-native";
 import { styles } from "@/styles/inbox";
-import { timeAgo } from "@/utils/common";
+import { LinearGradient } from "expo-linear-gradient";
 
-export default function Inbox(){
-   const router = useRouter();
-   const { user } = useAuth();
-   const conversations = [
-     {
-        id: "1",
-        user: {
-           id: "2",
-           name: "Muhammad",
-           username: "muhammad124711",
-           image: "https://i.pravatar.cc/150?img=1"
-        },
-        lastMessage: "Hey, how are you doing?",
-        lastMessageAt: "2024-07-20T12:00:00Z",
-     },
-     {
-        id: "2",
-        user: {
-           id: "3",
-           name: "MD",
-           username: "m8374527",
-           image: "https://i.pravatar.cc/150?img=2"
-        },
-        lastMessage: "I'm good, thanks! How about you?",
-        lastMessageAt: "2024-07-20T12:05:00Z"
-     },
-     {
-        id: "3",
-        user: {
-           id: "4",
-           name: "John Doe",
-           username: "johndoe",
-           image: "https://i.pravatar.cc/150?img=3"
-        },
-        lastMessage: "Let's catch up soon!",
-        lastMessageAt: "2024-07-20T12:10:00Z"
-     }
-   ]
+export default function Inbox() {
+  const router = useRouter();
+  const { user } = useAuth();
+
+  // Mock messages data (replace with real data later)
+  const messages = [
+    {
+      id: "1",
+      user: "Emma Wilson",
+      avatar: require("@/assets/images/defaultUser.png"),
+      lastMessage: "Haha that’s hilarious 😂",
+      timestamp: "2m ago",
+      unread: 3,
+      isOnline: true,
+    },
+    {
+      id: "2",
+      user: "Alex Chen",
+      avatar: require("@/assets/images/defaultUser.png"),
+      lastMessage: "Are we still on for tomorrow?",
+      timestamp: "15m ago",
+      unread: 0,
+      isOnline: true,
+    },
+    {
+      id: "3",
+      user: "Sarah Kim",
+      avatar: require("@/assets/images/defaultUser.png"),
+      lastMessage: "Sent you a photo",
+      timestamp: "1h ago",
+      unread: 1,
+      isOnline: false,
+    },
+    {
+      id: "4",
+      user: "John Doe",
+      avatar: require("@/assets/images/defaultUser.png"),
+      lastMessage: "Thanks for the help!",
+      timestamp: "3h ago",
+      unread: 0,
+      isOnline: false,
+    },
+    {
+      id: "5",
+      user: "Maya Patel",
+      avatar: require("@/assets/images/defaultUser.png"),
+      lastMessage: "Voice message (0:12)",
+      timestamp: "Yesterday",
+      unread: 5,
+      isOnline: true,
+    },
+  ];
+
+  const renderMessageItem = ({ item }: { item: any }) => (
+    <TouchableOpacity
+      style={styles.messageItem}
+      // onPress={() => router.push({
+      //   pathname: "/(app)/chat",
+      //   params: { userId: item.id, username: item.user }
+      // })}
+      activeOpacity={0.7}
+    >
+      <View style={styles.avatarContainer}>
+        <Image source={item.avatar} style={styles.avatar} />
+        {item.isOnline && <View style={styles.onlineDot} />}
+      </View>
+
+      <View style={styles.messageContent}>
+        <View style={styles.messageHeader}>
+          <Text style={styles.username}>{item.user}</Text>
+          <Text style={styles.timestamp}>{item.timestamp}</Text>
+        </View>
+        <Text style={styles.lastMessage} numberOfLines={1}>
+          {item.lastMessage}
+        </Text>
+      </View>
+
+      {item.unread > 0 && (
+        <View style={styles.unreadBadge}>
+          <Text style={styles.unreadText}>{item.unread > 9 ? "9+" : item.unread}</Text>
+        </View>
+      )}
+    </TouchableOpacity>
+  );
 
   return (
     <ScreenWrapper bg="#fff">
-      {/* Header */}
-      <View style={styles.header}>
+      <StatusBar barStyle="dark-content" />
+
+      {/* Gradient Header */}
+      <View
+        style={styles.header}
+      >
         <Text style={styles.headerTitle}>Messages</Text>
-        <Pressable onPress={() => router.push("/(app)/inbox2")}>
-          <Icon name="chat" size={24} color={theme.colors.text} />
+        <Pressable style={styles.searchButton}>
+          <Icon name="search" size={24} color="#fff" />
         </Pressable>
       </View>
 
+      {/* Messages List */}
       <FlatList
-        data={conversations}
+        data={messages}
         keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <Pressable
-            style={styles.conversationItem}
-            onPress={() => router.push(`/(app)/inbox/${item.id}`)}
-            >
-            <Image
-              source={{ uri: item.user.image }}
-              style={styles.conversationAvatar}
-            />
-            <View style={{ flex: 1 }}>
-              <Text style={styles.conversationName}>{item.user.name}</Text>
-              <Text style={styles.conversationLastMessage}>
-                {item.lastMessage}
-              </Text>
-              <Text style={styles.conversationTime}>
-                {timeAgo(item.lastMessageAt)}
-              </Text>
-            </View>
-            {/* Unread dot */}
-            {item.id === "1" && (
-              <View style={styles.unreadDot} />
-            )}
-            {/* Unread count */}
-            <View style={styles.unreadCount}>
-              <Text style={styles.unreadCountText}>2</Text>
-            </View>
-          </Pressable>
-        ))}
+        renderItem={renderMessageItem}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingTop: hp(2) }}
+        ListEmptyComponent={
+          <View style={styles.emptyContainer}>
+            <Icon name="message-circle" size={80} color="#ccc" />
+            <Text style={styles.emptyText}>No messages yet</Text>
+            <Text style={styles.emptySubtext}>Start a conversation!</Text>
+          </View>
+        }
       />
-      {/* New Message Button */}
-      <Pressable style={styles.newMessageBtn}>
-        <Icon name="edit" size={24} color="#fff" />
+
+      {/* Floating New Message Button */}
+      <Pressable
+        style={styles.fab}
+        onPress={() => router.push("/")}
+      >
+        <Icon name="edit" size={28} color="#fff" strokeWidth={2.5} />
       </Pressable>
-  )
+    </ScreenWrapper>
+  );
 }

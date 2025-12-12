@@ -1,10 +1,9 @@
 import Icon from "@/assets/icons";
 import ScreenWrapper from "@/components/ui/ScreenWrapper";
-import { theme } from "@/constants/theme";
 import { useAuth } from "@/contexts/authContext";
 import { wp, hp } from "@/utils/common";
 import { useRouter } from "expo-router";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -125,10 +124,7 @@ export default function Inbox() {
     <TouchableOpacity
       style={styles.searchUserItem}
       onPress={() =>
-        router.push({
-          pathname: "/(app)/chat",
-          params: { userId: item.id, username: item.username },
-        })
+        router.push(`/(app)/inbox/${user?.username}_${item.username}`)
       }
     >
       <Image
@@ -160,7 +156,7 @@ export default function Inbox() {
             placeholderTextColor="#aaa"
             value={searchQuery}
             onChangeText={setSearchQuery}
-            onSubmitEditing={handleSearch} // Optional: search on Enter
+            onSubmitEditing={handleSearch} // search on Enter
             autoCorrect={false}
           />
 
@@ -175,8 +171,8 @@ export default function Inbox() {
           )}
 
           {/* Search Button */}
-          <Pressable onPress={handleSearch} style={styles.searchButton}>
-            <Ionicons name="arrow-forward" size={20} color="#fff" />
+          <Pressable onPress={handleSearch} style={styles.searchButton2}>
+            <Ionicons name="arrow-forward" size={18} color="#fff" />
           </Pressable>
         </View>
       </View>
@@ -210,7 +206,7 @@ export default function Inbox() {
       {/* Floating New Message Button */}
       <Pressable
         style={styles.fab}
-        onPress={() => router.push("/(app)/new-message")}
+        onPress={() => router.push("/(app)/inbox")}
       >
         <Icon name="edit" size={28} color="#fff" strokeWidth={2.5} />
       </Pressable>

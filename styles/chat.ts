@@ -65,13 +65,13 @@ export const styles = StyleSheet.create({
   },
   myBubble: {
     backgroundColor: theme.colors.primary,
-    borderBottomRightRadius: 20,
-    borderBottomLeftRadius: 0, // tail on left for others
-  },
-  theirBubble: {
-    backgroundColor: "#f1f1f1",
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 0,
+},
+theirBubble: {
+    backgroundColor: "#f1f1f1",
+    borderBottomRightRadius: 20,
+    borderBottomLeftRadius: 0, // tail on left for others
   },
   messageText: {
     fontSize: hp(2.1),

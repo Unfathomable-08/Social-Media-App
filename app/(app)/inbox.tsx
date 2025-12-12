@@ -90,10 +90,7 @@ export default function Inbox() {
     <TouchableOpacity
       style={styles.messageItem}
       onPress={() =>
-        router.push({
-          pathname: "/(app)/chat",
-          params: { userId: item.id, username: item.user },
-        })
+        router.push('/')
       }
       activeOpacity={0.7}
     >
@@ -123,9 +120,14 @@ export default function Inbox() {
   const renderSearchUser = ({ item }: { item: SearchUser }) => (
     <TouchableOpacity
       style={styles.searchUserItem}
-      onPress={() =>
-        router.push(`/(app)/inbox/${user?.username}_${item.username}`)
-      }
+      onPress={() => {
+        if (!user?.username || !item.username) return;
+
+        const sortedUsernames = [user.username, item.username].sort();
+        const chatPath = sortedUsernames.join("_");
+
+        router.push(`/(app)/inbox/${chatPath}`);
+      }}
     >
       <Image
         source={

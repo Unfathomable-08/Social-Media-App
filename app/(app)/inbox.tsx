@@ -4,7 +4,7 @@ import { theme } from "@/constants/theme";
 import { useAuth } from "@/contexts/authContext";
 import { wp, hp } from "@/utils/common";
 import { useRouter } from "expo-router";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -14,17 +14,39 @@ import {
   StatusBar,
   TouchableOpacity,
   TextInput,
+  ActivityIndicator,
+  Alert,
 } from "react-native";
 import { styles } from "@/styles/inbox";
 import { Ionicons } from "@expo/vector-icons";
+import { searchUsers } from "@/utils/search";
+
+interface Message {
+  id: string;
+  user: string;
+  avatar: any;
+  lastMessage: string;
+  timestamp: string;
+  unread: number;
+  isOnline: boolean;
+}
+
+interface SearchUser {
+  id: string;
+  username: string;
+  avatar?: string; // assuming the API returns avatar URL or you have a default
+}
 
 export default function Inbox() {
   const router = useRouter();
   const { user } = useAuth();
   const [searchQuery, setSearchQuery] = useState("");
-  
-  // Mock messages data
-  const messages = [
+  const [searchResults, setSearchResults] = useState<SearchUser[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
+
+  // Mock messages data (your conversations)
+  const messages: Message[] = [
     {
       id: "1",
       user: "Emma Wilson",
@@ -34,50 +56,38 @@ export default function Inbox() {
       unread: 3,
       isOnline: true,
     },
-    {
-      id: "2",
-      user: "Alex Chen",
-      avatar: require("@/assets/images/defaultUser.png"),
-      lastMessage: "Are we still on for tomorrow?",
-      timestamp: "15m ago",
-      unread: 0,
-      isOnline: true,
-    },
-    {
-      id: "3",
-      user: "Sarah Kim",
-      avatar: require("@/assets/images/defaultUser.png"),
-      lastMessage: "Sent you a photo",
-      timestamp: "1h ago",
-      unread: 1,
-      isOnline: false,
-    },
-    {
-      id: "4",
-      user: "John Doe",
-      avatar: require("@/assets/images/defaultUser.png"),
-      lastMessage: "Thanks for the help!",
-      timestamp: "3h ago",
-      unread: 0,
-      isOnline: false,
-    },
-    {
-      id: "5",
-      user: "Maya Patel",
-      avatar: require("@/assets/images/defaultUser.png"),
-      lastMessage: "Voice message (0:12)",
-      timestamp: "Yesterday",
-      unread: 5,
-      isOnline: true,
-    },
+    // ... other mock messages
   ];
 
-  // Filter messages based on search
-  const filteredMessages = messages.filter((msg) =>
-    msg.user.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const handleSearch = async () => {
+    if (!searchQuery.trim()) {
+      setIsSearching(false);
+      setSearchResults([]);
+      return;
+    }
 
-  const renderMessageItem = ({ item }: { item: any }) => (
+    setLoading(true);
+    setIsSearching(true);
+    try {
+      const results = await searchUsers(searchQuery.trim());
+      // Assuming searchUsers now returns the data properly
+      setSearchResults(results || []);
+    } catch (err) {
+      Alert.alert("Error", "Failed to search users. Please try again.");
+      console.error(err);
+      setSearchResults([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const clearSearch = () => {
+    setSearchQuery("");
+    setIsSearching(false);
+    setSearchResults([]);
+  };
+
+  const renderMessageItem = ({ item }: { item: Message }) => (
     <TouchableOpacity
       style={styles.messageItem}
       onPress={() =>
@@ -92,7 +102,6 @@ export default function Inbox() {
         <Image source={item.avatar} style={styles.avatar} />
         {item.isOnline && <View style={styles.onlineDot} />}
       </View>
-
       <View style={styles.messageContent}>
         <View style={styles.messageHeader}>
           <Text style={styles.username}>{item.user}</Text>
@@ -102,7 +111,6 @@ export default function Inbox() {
           {item.lastMessage}
         </Text>
       </View>
-
       {item.unread > 0 && (
         <View style={styles.unreadBadge}>
           <Text style={styles.unreadText}>
@@ -110,6 +118,28 @@ export default function Inbox() {
           </Text>
         </View>
       )}
+    </TouchableOpacity>
+  );
+
+  const renderSearchUser = ({ item }: { item: SearchUser }) => (
+    <TouchableOpacity
+      style={styles.searchUserItem}
+      onPress={() =>
+        router.push({
+          pathname: "/(app)/chat",
+          params: { userId: item.id, username: item.username },
+        })
+      }
+    >
+      <Image
+        source={
+          item.avatar
+            ? { uri: item.avatar }
+            : require("@/assets/images/defaultUser.png")
+        }
+        style={styles.avatar}
+      />
+      <Text style={styles.searchUsername}>{item.username}</Text>
     </TouchableOpacity>
   );
 
@@ -121,41 +151,57 @@ export default function Inbox() {
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Messages</Text>
 
-        {/* Instagram-style Search Bar */}
         <View style={styles.searchContainer}>
           <Ionicons name="search" size={20} color="#888" style={styles.searchIcon} />
+
           <TextInput
             style={styles.searchInput}
-            placeholder="Search"
+            placeholder="Search users"
             placeholderTextColor="#aaa"
             value={searchQuery}
             onChangeText={setSearchQuery}
-            clearButtonMode="while-editing"
+            onSubmitEditing={handleSearch} // Optional: search on Enter
             autoCorrect={false}
           />
-          {searchQuery.length > 0 && (
-            <Pressable onPress={() => setSearchQuery("")} style={styles.clearButton}>
+
+          {loading && (
+            <ActivityIndicator size="small" color="#888" style={{ marginRight: 8 }} />
+          )}
+
+          {searchQuery.length > 0 && !loading && (
+            <Pressable onPress={clearSearch} style={styles.clearButton}>
               <Ionicons name="close-outline" size={18} color="#888" />
             </Pressable>
           )}
+
+          {/* Search Button */}
+          <Pressable onPress={handleSearch} style={styles.searchButton}>
+            <Ionicons name="arrow-forward" size={20} color="#fff" />
+          </Pressable>
         </View>
       </View>
 
-      {/* Messages List */}
+      {/* Content */}
       <FlatList
-        data={filteredMessages}
-        keyExtractor={(item) => item.id}
-        renderItem={renderMessageItem}
+        data={isSearching ? searchResults : messages}
+        keyExtractor={(item: any) => item.id}
+        renderItem={({ item }) =>
+          isSearching ? renderSearchUser({ item }) : renderMessageItem({ item })
+        }
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingTop: hp(1) }}
         ListEmptyComponent={
           <View style={styles.emptyContainer}>
             <Icon name="comment" size={80} color="#ddd" />
             <Text style={styles.emptyText}>
-              {searchQuery ? "No results found" : "No messages yet"}
+              {isSearching
+                ? "No users found"
+                : "No messages yet"}
             </Text>
             <Text style={styles.emptySubtext}>
-              {searchQuery ? `Try searching for "${searchQuery}"` : "Start a conversation!"}
+              {isSearching
+                ? `No results for "${searchQuery}"`
+                : "Start a conversation!"}
             </Text>
           </View>
         }

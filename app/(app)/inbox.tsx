@@ -16,6 +16,7 @@ import {
   TextInput,
 } from "react-native";
 import { styles } from "@/styles/inbox";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function Inbox() {
   const router = useRouter();
@@ -122,7 +123,7 @@ export default function Inbox() {
 
         {/* Instagram-style Search Bar */}
         <View style={styles.searchContainer}>
-          <Icon name="search" size={20} color="#888" style={styles.searchIcon} />
+          <Ionicons name="search" size={20} color="#888" style={styles.searchIcon} />
           <TextInput
             style={styles.searchInput}
             placeholder="Search"
@@ -134,7 +135,7 @@ export default function Inbox() {
           />
           {searchQuery.length > 0 && (
             <Pressable onPress={() => setSearchQuery("")} style={styles.clearButton}>
-              <Icon name="x" size={18} color="#888" />
+              <Ionicons name="close-outline" size={18} color="#888" />
             </Pressable>
           )}
         </View>
@@ -149,7 +150,7 @@ export default function Inbox() {
         contentContainerStyle={{ paddingTop: hp(1) }}
         ListEmptyComponent={
           <View style={styles.emptyContainer}>
-            <Icon name="message-circle" size={80} color="#ddd" />
+            <Icon name="comment" size={80} color="#ddd" />
             <Text style={styles.emptyText}>
               {searchQuery ? "No results found" : "No messages yet"}
             </Text>

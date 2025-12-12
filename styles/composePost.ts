@@ -8,7 +8,6 @@ export const styles = StyleSheet.create({
         justifyContent: "space-between",
         alignItems: "center",
         paddingHorizontal: wp(5),
-        paddingTop: hp(2),
         paddingBottom: hp(2),
         backgroundColor: "#fff",
         borderBottomWidth: 1,

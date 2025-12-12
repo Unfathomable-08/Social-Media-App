@@ -92,7 +92,7 @@ export default function Home() {
           <Pressable>
             <Icon name="heart" size={28} color={theme.colors.text} />
           </Pressable>
-          <Pressable onPress={() => router.push("/")}>
+          <Pressable onPress={() => router.push("/(app)/inbox")}>
             <Icon name="send" size={28} color={theme.colors.text} />
           </Pressable>
         </View>

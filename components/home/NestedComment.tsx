@@ -34,7 +34,7 @@ export const NestedComment = ({
   };
 
   // Visual adjustments based on depth
-  const indent = depth * 32; // Enough space for line + avatar
+  const indent = depth * 20; // Enough space for line + avatar
   const avatarSize = Math.max(42 - depth * 4, 28);
   const fontScale = Math.max(1 - depth * 0.04, 0.88);
   const isReply = depth > 0;

@@ -14,7 +14,7 @@ import {
 import ScreenWrapper from "@/components/ui/ScreenWrapper";
 import { useLocalSearchParams, router } from "expo-router";
 import { useAuth } from "@/contexts/authContext";
-import { searchUsers } from "@/utils/search";
+import { searchUserByID } from "@/utils/search";
 import { styles } from "@/styles/chat";
 import { theme } from "@/constants/theme";
 import { wp, hp } from "@/utils/common";
@@ -39,8 +39,8 @@ export default function DirectChat() {
       const usernameStr = Array.isArray(username) ? username[0] : username;
       const parts = usernameStr.split("_");
       const other = parts[0] != user?.username ? parts[0] : parts[1];
-      const results = await searchUsers(other);
-      if (results[0]) setOtherUser(results[0]);
+      const results = await searchUserByID(other);
+      if (results) setOtherUser(results);
     };
 
     fetchData();

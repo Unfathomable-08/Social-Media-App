@@ -3,7 +3,7 @@ import ScreenWrapper from "@/components/ui/ScreenWrapper";
 import { useAuth } from "@/contexts/authContext";
 import { wp, hp } from "@/utils/common";
 import { useRouter } from "expo-router";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -19,44 +19,46 @@ import {
 import { styles } from "@/styles/inbox";
 import { Ionicons } from "@expo/vector-icons";
 import { searchUsers } from "@/utils/search";
+import { getChatsMetadata } from "@/utils/inbox";
 
-interface Message {
-  id: string;
-  user: string;
-  avatar: any;
-  lastMessage: string;
-  timestamp: string;
-  unread: number;
-  isOnline: boolean;
+interface ChatUser {
+  _id: string;
+  username: string;
+  avatar?: string; 
+  isOnline?: boolean;
 }
 
-interface SearchUser {
-  id: string;
-  username: string;
-  avatar?: string; // assuming the API returns avatar URL or you have a default
+interface Message {
+  _id: string;
+  slug: string;
+  users: ChatUser[];
+  lastMessage?: string;
+  timestamp?: string;
+  unread?: number;
+}
+
+interface MessageItemProps {
+  item: Message;
+  currentUserId: string; 
 }
 
 export default function Inbox() {
   const router = useRouter();
   const { user } = useAuth();
   const [searchQuery, setSearchQuery] = useState("");
-  const [searchResults, setSearchResults] = useState<SearchUser[]>([]);
+  const [searchResults, setSearchResults] = useState([]);
+  const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
 
-  // Mock messages data (your conversations)
-  const messages: Message[] = [
-    {
-      id: "1",
-      user: "Emma Wilson",
-      avatar: require("@/assets/images/defaultUser.png"),
-      lastMessage: "Haha that’s hilarious 😂",
-      timestamp: "2m ago",
-      unread: 3,
-      isOnline: true,
-    },
-    // ... other mock messages
-  ];
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await getChatsMetadata();
+      setMessages(res);
+    };
+
+    fetchData();
+  }, []);
 
   const handleSearch = async () => {
     if (!searchQuery.trim()) {
@@ -86,44 +88,66 @@ export default function Inbox() {
     setSearchResults([]);
   };
 
-  const renderMessageItem = ({ item }: { item: Message }) => (
+const renderMessageItem = ({ item, currentUserId }: MessageItemProps) => {
+  const router = useRouter();
+
+  // Find the OTHER user (not the current user)
+  const otherUser = item.users.find(user => user._id !== currentUserId);
+
+  // Fallback if something goes wrong 
+  const displayUser = otherUser || item.users[0];
+
+  const username = displayUser.username || 'Unknown';
+  const avatarSource = displayUser.avatar
+    ? { uri: displayUser.avatar }
+    : require('@/assets/images/defaultUser.png');
+
+  const isOnline = displayUser.isOnline ?? false;
+  const unreadCount = item.unread || 0;
+
+  return (
     <TouchableOpacity
       style={styles.messageItem}
-      onPress={() =>
-        router.push('/')
-      }
+      onPress={() => router.push(`/inbox/${item.slug}`)}
       activeOpacity={0.7}
     >
       <View style={styles.avatarContainer}>
-        <Image source={item.avatar} style={styles.avatar} />
-        {item.isOnline && <View style={styles.onlineDot} />}
+        <Image source={avatarSource} style={styles.avatar} />
+        {isOnline && <View style={styles.onlineDot} />}
       </View>
+
       <View style={styles.messageContent}>
         <View style={styles.messageHeader}>
-          <Text style={styles.username}>{item.user}</Text>
-          <Text style={styles.timestamp}>{item.timestamp}</Text>
+          <Text style={styles.username}>{username}</Text>
+          {item.timestamp && (
+            <Text style={styles.timestamp}>{item.timestamp}</Text>
+          )}
         </View>
-        <Text style={styles.lastMessage} numberOfLines={1}>
-          {item.lastMessage}
-        </Text>
+        {item.lastMessage && (
+          <Text style={styles.lastMessage} numberOfLines={1}>
+            {item.lastMessage}
+          </Text>
+        )}
       </View>
-      {item.unread > 0 && (
+
+      {unreadCount > 0 && (
         <View style={styles.unreadBadge}>
           <Text style={styles.unreadText}>
-            {item.unread > 9 ? "9+" : item.unread}
+            {unreadCount > 9 ? '9+' : unreadCount}
           </Text>
         </View>
       )}
     </TouchableOpacity>
   );
+};
 
-  const renderSearchUser = ({ item }: { item: SearchUser }) => (
+  const renderSearchUser = ({ item }: { item: ChatUser }) => (
     <TouchableOpacity
       style={styles.searchUserItem}
       onPress={() => {
         if (!user?.username || !item.username) return;
 
-        const sortedUsernames = [user.username, item.username].sort();
+        const sortedUsernames = [user.id, item._id].sort();
         const chatPath = sortedUsernames.join("_");
 
         router.push(`/(app)/inbox/${chatPath}`);
@@ -150,7 +174,12 @@ export default function Inbox() {
         <Text style={styles.headerTitle}>Messages</Text>
 
         <View style={styles.searchContainer}>
-          <Ionicons name="search" size={20} color="#888" style={styles.searchIcon} />
+          <Ionicons
+            name="search"
+            size={20}
+            color="#888"
+            style={styles.searchIcon}
+          />
 
           <TextInput
             style={styles.searchInput}
@@ -163,7 +192,11 @@ export default function Inbox() {
           />
 
           {loading && (
-            <ActivityIndicator size="small" color="#888" style={{ marginRight: 8 }} />
+            <ActivityIndicator
+              size="small"
+              color="#888"
+              style={{ marginRight: 8 }}
+            />
           )}
 
           {searchQuery.length > 0 && !loading && (
@@ -192,9 +225,7 @@ export default function Inbox() {
           <View style={styles.emptyContainer}>
             <Icon name="comment" size={80} color="#ddd" />
             <Text style={styles.emptyText}>
-              {isSearching
-                ? "No users found"
-                : "No messages yet"}
+              {isSearching ? "No users found" : "No messages yet"}
             </Text>
             <Text style={styles.emptySubtext}>
               {isSearching
@@ -206,10 +237,7 @@ export default function Inbox() {
       />
 
       {/* Floating New Message Button */}
-      <Pressable
-        style={styles.fab}
-        onPress={() => router.push("/(app)/inbox")}
-      >
+      <Pressable style={styles.fab} onPress={() => router.push("/(app)/inbox")}>
         <Icon name="edit" size={28} color="#fff" strokeWidth={2.5} />
       </Pressable>
     </ScreenWrapper>

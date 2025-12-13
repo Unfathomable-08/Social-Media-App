@@ -18,33 +18,15 @@ api.interceptors.request.use(async (config) => {
   return config;
 });
 
-export const searchUsers = async (username: string) => {
+export const getChatsMetadata = async () => {
   try {
-    const res = await api.get(`/username/${username}`);
+    const res = await api.get(`/chats`);
+    console.log(res.data.chats)
 
-    return res.data.users;
+    return res.data.chats;
   }
   catch (error: any){
-    console.error("Error searching users:", error);
-
-    if (error.response) {
-      throw new Error(error.response.data.message || 'Failed to load feed');
-    } else if (error.request) {
-      throw new Error('No response from server. Check your internet connection.');
-    } else {
-      throw new Error(error.message || 'An unexpected error occurred');
-    }
-  }
-}
-
-export const searchUserByID = async (id: string) => {
-  try {
-    const res = await api.get(`/id/${id}`);
-
-    return res.data.user;
-  }
-  catch (error: any){
-    console.error("Error searching user:", error);
+    console.error("Error getting chats:", error);
 
     if (error.response) {
       throw new Error(error.response.data.message || 'Failed to load feed');

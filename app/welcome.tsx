@@ -20,7 +20,7 @@ export default function Welcome(){
             />
 
            <View style={{gap: 16}}>
-              <Text style={styles.title}>RedShift</Text>
+              <Text style={styles.title}>Awaza</Text>
               <Text style={styles.punchline}>
                  Your ultimate social media app for sharing your favorite moments on Photos and connecting with friends globally!
               </Text>

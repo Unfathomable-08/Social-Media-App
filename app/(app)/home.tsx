@@ -87,7 +87,7 @@ export default function Home() {
 
       {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.logo}>RedShift</Text>
+        <Text style={styles.logo}>Awaza</Text>
         <View style={{ flexDirection: "row", gap: 16 }}>
           <Pressable>
             <Icon name="heart" size={28} color={theme.colors.text} />

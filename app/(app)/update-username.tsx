@@ -3,6 +3,7 @@ import { theme } from "@/constants/theme";
 import { useAuth } from "@/contexts/authContext";
 import { hp, wp } from "@/utils/common";
 import { useRouter } from "expo-router";
+import { updateUsername } from "@/utils/accountSetting";
 import React, { useState } from "react";
 import {
   ActivityIndicator,
@@ -17,12 +18,11 @@ import {
 
 export default function UpdateUsername() {
   const router = useRouter();
-  const { user, updateUserProfile } = useAuth();
+  const { user } = useAuth();
   const [username, setUsername] = useState(user?.username || "");
   const [loading, setLoading] = useState(false);
 
   const isValidUsername = (str: string) => {
-    // Only lowercase letters, numbers, underscore, and 3-20 chars
     return /^[a-z0-9_]{3,20}$/.test(str);
   };
 
@@ -49,7 +49,7 @@ export default function UpdateUsername() {
 
     setLoading(true);
     try {
-      await updateUserProfile({ username: trimmed });
+      await updateUsername(trimmed);
 
       Alert.alert("Success", "Username updated successfully!", [
         { text: "OK", onPress: () => router.back() },

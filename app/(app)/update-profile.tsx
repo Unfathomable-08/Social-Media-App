@@ -18,14 +18,13 @@ import {
   Text,
   TextInput,
   View,
-  StyleSheet
 } from "react-native";
 
 const IMGBB_API_KEY = process.env.EXPO_PUBLIC_IMGBB_API_KEY;
 
 export default function UpdateProfile() {
   const router = useRouter();
-  const { user, updateUserProfile } = useAuth();
+  const { user } = useAuth();
   const [name, setName] = useState(user?.name || "");
   const [image, setImage] = useState<string | null>(user?.avatar || null);
   const [loading, setLoading] = useState(false);
@@ -72,7 +71,7 @@ export default function UpdateProfile() {
         imageUrl = res.data.data.url;
       }
 
-      const updatedUser = await updateProfile(name.trim(), imageUrl);
+      await updateProfile(name.trim(), imageUrl);
 
       Alert.alert("Success", "Profile updated!", [
         { text: "OK", onPress: () => router.back() },

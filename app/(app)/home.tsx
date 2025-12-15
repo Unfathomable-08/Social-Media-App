@@ -89,8 +89,8 @@ export default function Home() {
       <View style={styles.header}>
         <Text style={styles.logo}>Awaza</Text>
         <View style={{ flexDirection: "row", gap: 16 }}>
-          <Pressable>
-            <Icon name="heart" size={28} color={theme.colors.text} />
+          <Pressable onPress={() => router.push('/(app)/account-setting')}>
+            <Icon name="user" size={28} color={theme.colors.text} />
           </Pressable>
           <Pressable onPress={() => router.push("/(app)/inbox")}>
             <Icon name="send" size={28} color={theme.colors.text} />

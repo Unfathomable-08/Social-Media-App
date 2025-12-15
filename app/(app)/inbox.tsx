@@ -9,7 +9,6 @@ import {
   Text,
   FlatList,
   Pressable,
-  Image,
   StatusBar,
   TouchableOpacity,
   TextInput,
@@ -20,6 +19,7 @@ import { styles } from "@/styles/inbox";
 import { Ionicons } from "@expo/vector-icons";
 import { searchUsers } from "@/utils/search";
 import { getChatsMetadata } from "@/utils/inbox";
+import { Image } from "expo-image";
 
 interface ChatUser {
   _id: string;
@@ -98,9 +98,7 @@ const renderMessageItem = ({ item, currentUserId }: MessageItemProps) => {
   const displayUser = otherUser || item.users[0];
 
   const username = displayUser.username || 'Unknown';
-  const avatarSource = displayUser.avatar
-    ? { uri: displayUser.avatar }
-    : require('@/assets/images/defaultUser.png');
+  const avatarSource = {uri: displayUser.avatar}
 
   const isOnline = displayUser.isOnline ?? false;
   const unreadCount = item.unread || 0;
@@ -112,7 +110,7 @@ const renderMessageItem = ({ item, currentUserId }: MessageItemProps) => {
       activeOpacity={0.7}
     >
       <View style={styles.avatarContainer}>
-        <Image source={avatarSource} style={styles.avatar} />
+        <Image contentFit="cover" source={avatarSource} style={styles.avatar} placeholder={require("@/assets/images/defaultUser.png")} />
         {isOnline && <View style={styles.onlineDot} />}
       </View>
 
@@ -154,11 +152,9 @@ const renderMessageItem = ({ item, currentUserId }: MessageItemProps) => {
       }}
     >
       <Image
-        source={
-          item.avatar
-            ? { uri: item.avatar }
-            : require("@/assets/images/defaultUser.png")
-        }
+        source={{ uri: item.avatar }}
+        placeholder={require("@/assets/images/defaultUser.png")}
+        contentFit="cover"
         style={styles.avatar}
       />
       <Text style={styles.searchUsername}>{item.username}</Text>
@@ -174,7 +170,7 @@ const renderMessageItem = ({ item, currentUserId }: MessageItemProps) => {
         <Text style={styles.headerTitle}>Messages</Text>
 
         <View style={styles.searchContainer}>
-          <Ionicons
+          <Icon
             name="search"
             size={20}
             color="#888"
@@ -215,7 +211,7 @@ const renderMessageItem = ({ item, currentUserId }: MessageItemProps) => {
       {/* Content */}
       <FlatList
         data={isSearching ? searchResults : messages}
-        keyExtractor={(item: any) => item.id}
+        keyExtractor={(item: any) => item._id}
         renderItem={({ item }) =>
           isSearching ? renderSearchUser({ item }) : renderMessageItem({ item, currentUserId: user?.id || "" })
         }

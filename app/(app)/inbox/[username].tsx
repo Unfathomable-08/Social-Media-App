@@ -20,6 +20,7 @@ import { searchUserByID } from "@/utils/search";
 import { createChatsMetadata } from "@/utils/inbox";
 import { styles } from "@/styles/chat";
 import { theme } from "@/constants/theme";
+import Icon from "@/assets/icons";
 
 export default function DirectChat() {
   const { username } = useLocalSearchParams();
@@ -143,7 +144,7 @@ export default function DirectChat() {
       {/* Enhanced Header */}
       <View style={styles.header}>
         <Pressable onPress={() => router.back()} style={styles.backButton}>
-          <Ionicons name="arrow-back" size={28} color={theme.colors.text} />
+          <Icon name="arrowLeft" size={28} color={theme.colors.text} />
         </Pressable>
 
         <View style={styles.avatarContainer}>
@@ -198,7 +199,7 @@ export default function DirectChat() {
               !newMessage.trim() && styles.sendBtnDisabled,
             ]}
           >
-            <Ionicons name="send" size={24} color="white" />
+            <Icon name="send" size={24} color="white" />
           </Pressable>
         </View>
       </KeyboardAvoidingView>

@@ -1,5 +1,6 @@
 import { styles } from "@/styles/timeline";
-import { View, Image, Text, Pressable, TouchableOpacity } from "react-native";
+import { View, Text, Pressable, TouchableOpacity } from "react-native";
+import { Image } from "expo-image";
 import { Ionicons } from "@expo/vector-icons";
 import Icon from "@/assets/icons";
 import { useRouter } from "expo-router";
@@ -53,21 +54,13 @@ export const RenderPost = ({
       {/* Header */}
       <View style={styles.postHeader}>
         <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
-          {item.user?.avatar ? (
-            <Image
-              source={{
-                uri: item.user?.avatar,
-              }}
-              style={styles.postAvatar}
-            />
-          ) : (
-            <View style={styles.avatarCircle}>
-              <Text style={styles.avatarCircleText}>
-                {item.user?.name?.split("")[0] ||
-                  item.user?.username?.split("")[0]}
-              </Text>
-            </View>
-          )}
+          <Image
+            source={{
+              uri: item.user?.avatar,
+            }}
+            style={styles.postAvatar}
+            placeholder={require("@/assets/images/defaultUser.png")}
+          />
           <View>
             <Text style={styles.postUsername}>
               {item.user?.username || "Unknown"}
@@ -95,7 +88,7 @@ export const RenderPost = ({
           <Image
             source={{ uri: item.image }}
             style={styles.postImage}
-            resizeMode="cover"
+            contentFit="cover"
           />
         )}
       </View>

@@ -13,7 +13,6 @@ import React, { useState } from "react";
 import {
     ActivityIndicator,
     Alert,
-    Image,
     KeyboardAvoidingView,
     Platform,
     Pressable,
@@ -24,6 +23,7 @@ import {
     View,
 } from "react-native";
 import { styles } from "@/styles/composePost";
+import { Image } from "expo-image";
 
 const MAX_CHARS = 380;
 const IMGBB_API_KEY = process.env.EXPO_PUBLIC_IMGBB_API_KEY;
@@ -172,7 +172,7 @@ export default function CreatePost() {
                 <Image
                   source={{ uri: image }}
                   style={styles.previewImage}
-                  resizeMode="cover"
+                  contentFit="cover"
                 />
                 <Pressable onPress={removeImage} style={styles.removeBtn}>
                   <Ionicons

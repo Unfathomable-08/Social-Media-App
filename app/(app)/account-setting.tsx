@@ -8,12 +8,12 @@ import { useRouter } from "expo-router";
 import React from "react";
 import {
   ActivityIndicator,
-  Image,
   Pressable,
   StatusBar,
   Text,
   View,
 } from "react-native";
+import { Image } from 'expo-image';
 
 export default function AccountSettings() {
   const router = useRouter();
@@ -48,7 +48,11 @@ export default function AccountSettings() {
         {/* Current Avatar & Name */}
         <View style={styles.profileSection}>
           <View style={styles.avatarContainer}>
-            <Image source={avatarSource} style={styles.avatar} />
+            <Image 
+              source={avatarSource} 
+              style={styles.avatar} 
+              placeholder={require("@/assets/images/defaultUser.png")}
+            />
           </View>
           <Text style={styles.displayName}>{user?.name || "Your Name"}</Text>
           <Text style={styles.username}>@{user?.username || "username"}</Text>

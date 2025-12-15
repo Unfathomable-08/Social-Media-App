@@ -4,7 +4,8 @@ import { styles } from "@/styles/post";
 import { hp, wp } from "@/utils/common";
 import { useRouter } from "expo-router";
 import React from "react";
-import { Image, Pressable, Text, View } from "react-native";
+import { Pressable, Text, View } from "react-native";
+import { Image } from "expo-image";
 
 interface NestedCommentProps {
   comment: any;
@@ -22,6 +23,7 @@ export const NestedComment = ({
   depth = 0,
 }: NestedCommentProps) => {
   const router = useRouter();
+  console.log(comment)
 
   const timeAgo = (date: string) => {
     const diff = Date.now() - new Date(date).getTime();
@@ -87,11 +89,8 @@ export const NestedComment = ({
         {/* Avatar */}
         <Pressable onPress={() => router.push(`/`)}>
           <Image
-            source={
-              comment.user.image
-                ? { uri: comment.user.image }
-                : require("@/assets/images/defaultUser.png")
-            }
+            source={comment.user.avatar}
+            placeholder={require("@/assets/images/defaultUser.png")}
             style={{
               width: avatarSize,
               height: avatarSize,
@@ -144,7 +143,7 @@ export const NestedComment = ({
                   marginTop: hp(1.2),
                 },
               ]}
-              resizeMode="cover"
+              contentFit="cover"
             />
           )}
 

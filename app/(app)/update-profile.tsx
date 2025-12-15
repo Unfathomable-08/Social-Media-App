@@ -8,6 +8,7 @@ import * as FileSystem from "expo-file-system/legacy";
 import * as ImagePicker from "expo-image-picker";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
+import { updateProfile } from "@/utils/accountSetting";
 import {
   ActivityIndicator,
   Alert,
@@ -71,7 +72,7 @@ export default function UpdateProfile() {
         imageUrl = res.data.data.url;
       }
 
-      await updateUserProfile({ name: name.trim(), avatar: imageUrl });
+      const updatedUser = await updateProfile(name.trim(), imageUrl);
 
       Alert.alert("Success", "Profile updated!", [
         { text: "OK", onPress: () => router.back() },

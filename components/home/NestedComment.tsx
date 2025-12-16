@@ -2,10 +2,10 @@ import Icon from "@/assets/icons";
 import { theme } from "@/constants/theme";
 import { styles } from "@/styles/post";
 import { hp, wp } from "@/utils/common";
+import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import React from "react";
 import { Pressable, Text, View } from "react-native";
-import { Image } from "expo-image";
 
 interface NestedCommentProps {
   comment: any;
@@ -90,7 +90,7 @@ export const NestedComment = ({
         <Pressable onPress={() => router.push(`/`)}>
           <Image
             source={comment.user.avatar}
-            placeholder={require("@/assets/images/defaultUser.png")}
+            placeholder={require("@/assets/images/default_user.jpg")}
             style={{
               width: avatarSize,
               height: avatarSize,

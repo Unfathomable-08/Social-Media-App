@@ -1,9 +1,10 @@
 import Icon from "@/assets/icons";
+import { RenderPost } from "@/components/home/renderPost";
 import ScreenWrapper from "@/components/ui/ScreenWrapper";
 import { theme } from "@/constants/theme";
 import { useAuth } from "@/contexts/authContext";
 import { styles } from "@/styles/timeline";
-import { wp } from "@/utils/common";
+import { loadFeed } from "@/utils/feed";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
@@ -14,9 +15,6 @@ import {
   Text,
   View,
 } from "react-native";
-import { RenderPost } from "@/components/home/renderPost";
-import { renderStory } from "@/components/home/renderStory";
-import { loadFeed } from "@/utils/feed";
 
 export default function Home() {
   const router = useRouter();
@@ -67,28 +65,28 @@ export default function Home() {
     {
       _id: "1",
       user: "You",
-      image: require("@/assets/images/defaultUser.png"),
+      image: require("@/assets/images/default_user.jpg"),
       isYourStory: true,
     },
     {
       _id: "2",
       user: "Alex",
-      image: require("@/assets/images/defaultUser.png"),
+      image: require("@/assets/images/default_user.jpg"),
     },
     {
       _id: "3",
       user: "Emma",
-      image: require("@/assets/images/defaultUser.png"),
+      image: require("@/assets/images/default_user.jpg"),
     },
     {
       _id: "4",
       user: "John",
-      image: require("@/assets/images/defaultUser.png"),
+      image: require("@/assets/images/default_user.jpg"),
     },
     {
       _id: "5",
       user: "Sara",
-      image: require("@/assets/images/defaultUser.png"),
+      image: require("@/assets/images/default_user.jpg"),
     },
   ];
 

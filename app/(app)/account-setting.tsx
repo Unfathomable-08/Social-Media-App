@@ -1,9 +1,10 @@
 import Icon from "@/assets/icons";
-import { Ionicons } from "@expo/vector-icons";
 import ScreenWrapper from "@/components/ui/ScreenWrapper";
 import { theme } from "@/constants/theme";
 import { useAuth } from "@/contexts/authContext";
 import { styles } from "@/styles/accountSetting";
+import { Ionicons } from "@expo/vector-icons";
+import { Image } from 'expo-image';
 import { useRouter } from "expo-router";
 import React from "react";
 import {
@@ -13,7 +14,6 @@ import {
   Text,
   View,
 } from "react-native";
-import { Image } from 'expo-image';
 
 export default function AccountSettings() {
   const router = useRouter();
@@ -29,7 +29,7 @@ export default function AccountSettings() {
 
   const avatarSource = user?.avatar
     ? { uri: user.avatar }
-    : require("@/assets/images/defaultUser.png");
+    : require("@/assets/images/default_user.jpg");
 
   return (
     <ScreenWrapper bg="#fff">
@@ -51,7 +51,7 @@ export default function AccountSettings() {
             <Image 
               source={avatarSource} 
               style={styles.avatar} 
-              placeholder={require("@/assets/images/defaultUser.png")}
+              placeholder={require("@/assets/images/default_user.jpg")}
             />
           </View>
           <Text style={styles.displayName}>{user?.name || "Your Name"}</Text>

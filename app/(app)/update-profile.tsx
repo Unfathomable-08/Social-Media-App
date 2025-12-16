@@ -3,12 +3,12 @@ import ScreenWrapper from "@/components/ui/ScreenWrapper";
 import { theme } from "@/constants/theme";
 import { useAuth } from "@/contexts/authContext";
 import { profileStyles } from "@/styles/accountSetting";
+import { updateProfile } from "@/utils/accountSetting";
 import axios from "axios";
 import * as FileSystem from "expo-file-system/legacy";
 import * as ImagePicker from "expo-image-picker";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { updateProfile } from "@/utils/accountSetting";
 import {
   ActivityIndicator,
   Alert,
@@ -20,7 +20,6 @@ import {
   View,
 } from "react-native";
 
-const IMGBB_API_KEY = process.env.EXPO_PUBLIC_IMGBB_API_KEY;
 
 export default function UpdateProfile() {
   const router = useRouter();
@@ -28,7 +27,7 @@ export default function UpdateProfile() {
   const [name, setName] = useState(user?.name || "");
   const [image, setImage] = useState<string | null>(user?.avatar || null);
   const [loading, setLoading] = useState(false);
-
+  
   const pickImage = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -36,13 +35,15 @@ export default function UpdateProfile() {
       aspect: [1, 1],
       quality: 0.8,
     });
-
+    
     if (!result.canceled) {
       setImage(result.assets[0].uri);
     }
   };
-
+  
   const handleSave = async () => {
+    const IMGBB_API_KEY = process.env.EXPO_PUBLIC_IMGBB_API_KEY;
+    
     if (!name.trim()) {
       Alert.alert("Error", "Name cannot be empty");
       return;
@@ -103,7 +104,7 @@ export default function UpdateProfile() {
       <View style={profileStyles.content}>
         <Pressable onPress={pickImage} style={profileStyles.avatarWrapper}>
           <Image
-            source={image ? { uri: image } : require("@/assets/images/defaultUser.png")}
+            source={image ? { uri: image } : require("@/assets/images/default_user.jpg")}
             style={profileStyles.avatar}
           />
           <View style={profileStyles.editIcon}>

@@ -1,25 +1,25 @@
 import Icon from "@/assets/icons";
 import ScreenWrapper from "@/components/ui/ScreenWrapper";
 import { useAuth } from "@/contexts/authContext";
-import { wp, hp } from "@/utils/common";
+import { styles } from "@/styles/inbox";
+import { hp } from "@/utils/common";
+import { getChatsMetadata } from "@/utils/inbox";
+import { searchUsers } from "@/utils/search";
+import { Ionicons } from "@expo/vector-icons";
+import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
-  View,
-  Text,
+  ActivityIndicator,
+  Alert,
   FlatList,
   Pressable,
   StatusBar,
-  TouchableOpacity,
+  Text,
   TextInput,
-  ActivityIndicator,
-  Alert,
+  TouchableOpacity,
+  View,
 } from "react-native";
-import { styles } from "@/styles/inbox";
-import { Ionicons } from "@expo/vector-icons";
-import { searchUsers } from "@/utils/search";
-import { getChatsMetadata } from "@/utils/inbox";
-import { Image } from "expo-image";
 
 interface ChatUser {
   _id: string;
@@ -110,7 +110,7 @@ const renderMessageItem = ({ item, currentUserId }: MessageItemProps) => {
       activeOpacity={0.7}
     >
       <View style={styles.avatarContainer}>
-        <Image contentFit="cover" source={avatarSource} style={styles.avatar} placeholder={require("@/assets/images/defaultUser.png")} />
+        <Image contentFit="cover" source={avatarSource} style={styles.avatar} placeholder={require("@/assets/images/default_user.jpg")} />
         {isOnline && <View style={styles.onlineDot} />}
       </View>
 
@@ -153,7 +153,7 @@ const renderMessageItem = ({ item, currentUserId }: MessageItemProps) => {
     >
       <Image
         source={{ uri: item.avatar }}
-        placeholder={require("@/assets/images/defaultUser.png")}
+        placeholder={require("@/assets/images/default_user.jpg")}
         contentFit="cover"
         style={styles.avatar}
       />

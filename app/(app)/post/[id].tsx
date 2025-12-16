@@ -1,27 +1,25 @@
 import Icon from "@/assets/icons";
-import { Ionicons } from "@expo/vector-icons";
-import ScreenWrapper from "@/components/ui/ScreenWrapper";
 import { NestedComment } from "@/components/home/NestedComment";
+import ScreenWrapper from "@/components/ui/ScreenWrapper";
 import { theme } from "@/constants/theme";
 import { useAuth } from "@/contexts/authContext";
+import { styles } from "@/styles/post";
+import { buildCommentTree } from "@/utils/buildCommentTree";
+import { hp, timeAgo } from "@/utils/common";
 import { getPost } from "@/utils/post";
-import { loadComments } from "@/utils/postActions";
-import { hp, wp } from "@/utils/common";
-import { likePost } from "@/utils/postActions";
+import { likePost, loadComments } from "@/utils/postActions";
+import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
+  Alert,
   FlatList,
   Image,
   Pressable,
   Text,
   View,
-  Alert,
 } from "react-native";
-import { styles } from "@/styles/post";
-import { timeAgo } from "@/utils/common";
-import { buildCommentTree } from "@/utils/buildCommentTree";
 
 export default function PostDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -124,7 +122,7 @@ export default function PostDetail() {
                     source={
                       post.user.image
                         ? { uri: post.user.image }
-                        : require("@/assets/images/defaultUser.png")
+                        : require("@/assets/images/default_user.jpg")
                     }
                     style={styles.postAvatar}
                   />

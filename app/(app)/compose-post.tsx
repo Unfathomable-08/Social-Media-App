@@ -11,22 +11,21 @@ import * as ImagePicker from "expo-image-picker";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
-    ActivityIndicator,
-    Alert,
-    KeyboardAvoidingView,
-    Platform,
-    Pressable,
-    ScrollView,
-    StatusBar,
-    Text,
-    TextInput,
-    View,
+  ActivityIndicator,
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  ScrollView,
+  StatusBar,
+  Text,
+  TextInput,
+  View,
 } from "react-native";
 import { styles } from "@/styles/composePost";
 import { Image } from "expo-image";
 
 const MAX_CHARS = 380;
-const IMGBB_API_KEY = process.env.EXPO_PUBLIC_IMGBB_API_KEY;
 
 export default function CreatePost() {
   const router = useRouter();
@@ -34,27 +33,29 @@ export default function CreatePost() {
   const [image, setImage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const { user } = useAuth();
-
+  
   const isOverLimit = text.length > MAX_CHARS;
   const isEmpty = text.trim().length === 0;
   const isDisabled = isEmpty || isOverLimit || loading;
-
+  
   const pickImage = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       quality: 0.8,
     });
-
+    
     if (!result.canceled) {
       setImage(result.assets[0].uri);
       console.log(result.assets[0].uri);
     }
   };
-
+  
   const removeImage = () => setImage(null);
-
+  
   const handlePost = async () => {
+    const IMGBB_API_KEY = process.env.EXPO_PUBLIC_IMGBB_API_KEY;
+    
     if (isDisabled) return;
 
     setLoading(true);
@@ -91,8 +92,20 @@ export default function CreatePost() {
         { text: "Done", onPress: () => router.replace("/(app)/home") },
       ]);
     } catch (error: any) {
-      console.error(error);
-      Alert.alert("Error", error.message || "Failed to post. Try again.");
+      if (axios.isAxiosError(error)) {
+        console.error("Axios Error Full Object:", error);
+        console.error("Request config:", error.config);
+        console.error("Request sent:", error.request);
+        console.error("Response from server:", error.response); 
+      } else {
+        console.error("Non-Axios error:", error);
+      }
+      Alert.alert(
+        "Error",
+        axios.isAxiosError(error)
+          ? error.response?.data?.error || error.message
+          : error.message || "Failed to post. Try again."
+      );
     } finally {
       setLoading(false);
     }
@@ -107,7 +120,7 @@ export default function CreatePost() {
       >
         {/* Header */}
         <View style={styles.header}>
-          <Pressable onPress={() => router.replace('/(app)/home')} hitSlop={10}>
+          <Pressable onPress={() => router.replace("/(app)/home")} hitSlop={10}>
             <Text style={styles.cancelText}>Cancel</Text>
           </Pressable>
 
@@ -151,7 +164,7 @@ export default function CreatePost() {
                   strokeWidth={1.8}
                 />
               </View>
-              <Text style={styles.username}>{ user?.username || "You" }</Text>
+              <Text style={styles.username}>{user?.username || "You"}</Text>
             </View>
 
             {/* Text Input */}

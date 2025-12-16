@@ -1,14 +1,14 @@
-import { styles } from "@/styles/timeline";
-import { View, Text, Pressable, TouchableOpacity } from "react-native";
-import { Image } from "expo-image";
-import { Ionicons } from "@expo/vector-icons";
 import Icon from "@/assets/icons";
-import { useRouter } from "expo-router";
 import { theme } from "@/constants/theme";
-import { likePost } from "@/utils/postActions";
+import { styles } from "@/styles/timeline";
 import { User } from "@/utils/auth";
 import { timeAgo } from "@/utils/common";
+import { likePost } from "@/utils/postActions";
+import { Ionicons } from "@expo/vector-icons";
+import { Image } from "expo-image";
+import { useRouter } from "expo-router";
 import React from "react";
+import { Pressable, Text, TouchableOpacity, View } from "react-native";
 
 export const RenderPost = ({
   item,
@@ -59,7 +59,7 @@ export const RenderPost = ({
               uri: item.user?.avatar,
             }}
             style={styles.postAvatar}
-            placeholder={require("@/assets/images/defaultUser.png")}
+            placeholder={require("@/assets/images/default_user.jpg")}
           />
           <View>
             <Text style={styles.postUsername}>

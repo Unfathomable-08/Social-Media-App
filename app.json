@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "sm",
-    "slug": "sm",
+    "name": "Awaza",
+    "slug": "Awaza",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -19,7 +19,8 @@
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.muhammad1247.Awaza"
     },
     "web": {
       "output": "static",
@@ -43,6 +44,12 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "4763cb3f-270c-425b-8eca-2d4c5cb06fa1"
+      }
     }
   }
 }
